@@ -193,9 +193,10 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
             console.log("submit");
             canvas.style.display="block";
           }
+
           //move to input page
           if(!loading){
-            if((this.model.position.x>-430 && this.model.position.x<-420)&&(this.model.position.z>120 && this.model.position.z<160)){
+            if((this.model.position.x>-380 && this.model.position.x<-370)&&(this.model.position.z>-130 && this.model.position.z<-105)){
               canvas.style.display='none';
               document.querySelector('.input').style.display='block';
             }
@@ -210,7 +211,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
 
 
 
-var characterControl;;
+var characterControl;
 
 function LoadModel(){
 
@@ -245,7 +246,7 @@ function LoadModel(){
           {
               object.castShadow = true;
           }
-          model.position.set(0, 0, 120);
+          model.position.set(0, 0, -120);
           model.scale.set(12, 12, 12);
           model.rotation.y = THREE.MathUtils.degToRad(80);
 
@@ -271,22 +272,31 @@ function LoadModel(){
 
   //load reception model
 
-  const fbxLoader = new FBXLoader();
-  fbxLoader.load('./src/Sitting Idle.fbx', (fbx) => {
-    fbx.scale.set(0.12, 0.12, 0.12);
-    fbx.position.set(-450, 0, 140);
-    fbx.castShadow= true;
-    fbx.rotation.y=  THREE.MathUtils.degToRad(90); 
-    console.log(fbx);
-    // If the FBX model has animations, try to play the first one
-    if (fbx.animations && fbx.animations.length > 0) {
-      const mixer = new THREE.AnimationMixer(fbx);
-      const animationAction = mixer.clipAction(fbx.animations[0]);
-      animationAction.play();
-    }
+  charLoader.load("./src/reception.glb", (gltf)=> {
+    const model = gltf.scene
+    model.traverse( (object)=>{
+        if(object.isMesh)
+        {
+            object.castShadow = true;
+        }
+        model.position.set(-400, 0, -120);
+        model.scale.set(10, 10, 10);
+        model.rotation.y = THREE.MathUtils.degToRad(90);
+        scene.add(model)
+    })
 
-    scene.add(fbx);
-  });
+    var repGltfanimations = gltf.animations // getting all gltf animation clips from gltf model
+    var repMixer = new THREE.AnimationMixer(model) // will convert all animation clips into animation actions using mixer which helps into fading in or fading out animations for smooth animations transition
+    var repAnimationClip = repGltfanimations[0];
+
+    // Create an animation action
+    var repAnimationAction = repMixer.clipAction(repAnimationClip);
+    console.log(repAnimationAction);
+    
+    // Play the animation
+    repAnimationAction.play();
+    repMixer.update(clock.getDelta())
+})
 }
 
 

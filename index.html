@@ -27,8 +27,9 @@
       function handleSubmit(e){
             e.preventDefault();
             canvas.style.display="block";
+            input.innerHTML="<div>Thank you<div>"
             input.style.display='none';
-            console.log("submit", e.target);
+            console.log("submit", canvas.style.display, input.style.display);
           }
     </script>
   </body>

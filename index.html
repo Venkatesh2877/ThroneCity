@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <title>Three</title>
+  </head>
+  <body>
+    <div class="loading">Loading: <span id="per">0</span>%</div>
+    <canvas class="webgl"></canvas>
+    <div class="input">
+      <form onsubmit="handleSubmit(event)">
+        <p>Hi,<p>
+        <p>We require some user details to proceed</p>
+          <label for="fname">First name:</label><br>
+          <input type="text" id="fname" name="fname"><br>
+          <label for="lname">Last name:</label><br>
+          <input type="text" id="lname" name="lname"><br><br>
+          <input type="submit" value="Submit">
+        </form>
+    </div>
+    <script type="module" src="/main.js"></script>
+    <script>
+      const canvas = document.querySelector(".webgl");
+      const input= document.querySelector('.input');
+      function handleSubmit(e){
+            e.preventDefault();
+            canvas.style.display="block";
+            input.style.display='none';
+            console.log("submit", e.target);
+          }
+    </script>
+  </body>
+</html>

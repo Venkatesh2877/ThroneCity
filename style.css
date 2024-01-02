@@ -1,0 +1,23 @@
+body{
+  cursor: grab;
+  background-color: black;
+
+}
+
+div{
+  font-size: xx-large;
+  display: block;
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;  
+  transform: translate(-50%, -50%);
+}
+
+canvas{
+  display: none;
+}
+
+.input{
+  display: none;
+}

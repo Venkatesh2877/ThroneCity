@@ -1,23 +1,52 @@
 body{
-  cursor: grab;
-  background-color: black;
+    cursor: grab;
+    background-color: black;
+    color: white;
 
 }
 
-div{
-  font-size: xx-large;
-  display: block;
-  color: white;
-  position: absolute;
-  top: 50%;
-  left: 50%;  
-  transform: translate(-50%, -50%);
+.loading{
+    font-size: xx-large;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;  
+    transform: translate(-50%, -50%);
 }
+
+.userTypes{
+    position: absolute;
+    display: none;
+    justify-content: space-around;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    font-size: 4rem;
+}
+
+.userTypes > div {
+    border: 2px white solid;
+    padding: 3rem;
+    border-radius: 20px;
+    transition: ease-out 0.2s;
+}
+
+.userTypes > div:hover {
+    color: black;
+    background-color: white;
+    transform: scale(1.2);
+} 
+
 
 canvas{
-  display: none;
+    display: none;
+    position: relative;
+    z-index: 1;
 }
 
 .input{
-  display: none;
+    display: none;
+    position: absolute;
+    z-index: 2;
 }

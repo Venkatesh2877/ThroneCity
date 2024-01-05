@@ -57,6 +57,8 @@ scene.add( amblight );
 LoadModel();
 RAF();
 
+var userType=null;
+
 
 // world
 const loader= new THREE.CubeTextureLoader();
@@ -109,7 +111,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
 
       // CONSTANT DATA
       this.fadeDuration = 0.2
-      this.walkVelocity = 20
+      this.walkVelocity = 40
       this.currentAction=currentAction
       this.model = model
       this.mixer = mixer
@@ -188,16 +190,15 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
           this.orbitControl.target = this.cameraTarget;
 
 
-          function handleSubmit(e){
-            e.preventDefault();
-            console.log("submit");
-            canvas.style.display="block";
-          }
 
+          if(!loading && userType==null){
+            canvas.style.opacity="0.2";
+            document.querySelector('.userTypes').style.display='flex';
+          }
           //move to input page
           if(!loading){
             if((this.model.position.x>-380 && this.model.position.x<-370)&&(this.model.position.z>-130 && this.model.position.z<-105)){
-              canvas.style.display='none';
+              canvas.style.opacity="0.2";
               document.querySelector('.input').style.display='block';
             }
           }
@@ -209,6 +210,27 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
 
 })();
 
+document.getElementById("myForm").addEventListener("submit", function(event) {
+  event.preventDefault(); // Prevent the default form submission
+  // canvas.style.display='block';
+  canvas.style.opacity="1";
+  document.querySelector('.input').style.display = "none";
+  console.log("submit");
+});
+
+var userTypeElements = document.querySelectorAll(".userTypes .type");
+
+// Add click listener to each element
+userTypeElements.forEach(function (element) {
+    element.addEventListener("click", function () {
+        // Display the clicked element's value
+        var clickedValue = this.textContent; // or this.innerText
+        userType=clickedValue;
+        console.log(userType);
+        canvas.style.opacity="1";
+        document.querySelector('.userTypes').style.display='none';
+    });
+});
 
 
 var characterControl;
@@ -291,7 +313,6 @@ function LoadModel(){
 
     // Create an animation action
     var repAnimationAction = repMixer.clipAction(repAnimationClip);
-    console.log(repAnimationAction);
     
     // Play the animation
     repAnimationAction.play();

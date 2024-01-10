@@ -3,7 +3,8 @@ import * as THREE from "three";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import {FontLoader} from 'three/examples/jsm/loaders/FontLoader'
 
 const canvas = document.querySelector(".webgl");
 const renderer = new THREE.WebGLRenderer({canvas});
@@ -57,7 +58,7 @@ scene.add( amblight );
 LoadModel();
 RAF();
 
-var userType=null;
+var userType=null, inputing=false, registerinputing=true;
 
 
 // world
@@ -90,7 +91,7 @@ scene.add(plane);
 
 // CONTROLS
 var orbitControls = new OrbitControls(camera, renderer.domElement);
-orbitControls.enableDamping = true;
+// orbitControls.enableDamping = true;
 orbitControls.minDistance = 35;
 orbitControls.maxDistance = 45;
 orbitControls.enablePan = false;
@@ -177,29 +178,89 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
             this.model.position.x+=moveX;
           }else if(keysPressed['a']){
             this.model.position.x-=moveX/2;
-            this.model.position.z+=moveZ/2;
+            this.model.position.z+=moveZ;
           }else if(keysPressed['d']){
             this.model.position.x-=moveX/2;
-            this.model.position.z-=moveZ/2;
+            this.model.position.z-=moveZ;
           }
 
           
           this.cameraTarget.x = this.model.position.x;
-          this.cameraTarget.y = this.model.position.y + 1;
+          this.cameraTarget.y = this.model.position.y+2;
           this.cameraTarget.z = this.model.position.z;
           this.orbitControl.target = this.cameraTarget;
 
 
-
-          if(!loading && userType==null){
-            canvas.style.opacity="0.2";
-            document.querySelector('.userTypes').style.display='flex';
-          }
-          //move to input page
+          //input for the user login 
           if(!loading){
-            if((this.model.position.x>-380 && this.model.position.x<-370)&&(this.model.position.z>-130 && this.model.position.z<-105)){
+            if(userType==null){
+              canvas.style.opacity="0.2";
+              document.querySelector('.userTypes').style.display='flex';
+
+
+            }else if(userType=='User' && inputing){
+              inputing=false;
+              document.querySelector('.input').style.display='block';
+
+
+            }else if(userType=='New User' && inputing){
+              inputing=false;
+              document.querySelector('.input').style.display='block';
+              var newForm = document.createElement("form");
+              newForm.id = "myForm"; // Set the same ID as the original form
+
+              // Add new content to the form
+              newForm.innerHTML = `
+              <label for="username">Username:</label>
+              <input type="text" id="username" name="username" >
+      
+              <label for="password">Password:</label>
+              <input type="password" id="password" name="password" >
+              
+              <label for="confirmPassword">Confirm Password:</label>
+              <input type="password" id="confirmPassword" name="confirmPassword">
+      
+              <button type="submit">Submit</button>
+              `;
+              document.querySelector('.input').replaceChildren(newForm);
+
+
+            }else if(userType=='Client' && inputing){
+              inputing=false;
+              document.querySelector('.input').style.display='block';
+              var newForm = document.createElement("form");
+              newForm.id = "myForm"; // Set the same ID as the original form
+
+              // Add new content to the form
+              newForm.innerHTML = `
+              <label for="Company ID">Company Id:</label>
+              <input type="text" id="Company" name="Company" >
+              <button type="submit">Submit</button>
+              `;
+              document.querySelector('.input').replaceChildren(newForm);
+            }
+          }
+
+          //move to receiption page
+          if(!loading ){
+            if((this.model.position.x>-380 && this.model.position.x<-370)&&(this.model.position.z>-130 && this.model.position.z<-105) && registerinputing){
+              registerinputing=false;
               canvas.style.opacity="0.2";
               document.querySelector('.input').style.display='block';
+              var newForm = document.createElement("form");
+              newForm.id = "myForm"; 
+
+              // Add new content to the form
+              newForm.innerHTML = `
+              <label for="companyName">Company Name:</label>
+              <input type="text" id="companyName" name="companyName" >
+      
+              <label for="document">Company document:</label>
+              <input type="file" id="document" name="document" >
+              
+              <button type="submit">Submit</button>
+              `;
+              document.querySelector('.input').replaceChildren(newForm);
             }
           }
           
@@ -210,13 +271,33 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
 
 })();
 
-document.getElementById("myForm").addEventListener("submit", function(event) {
-  event.preventDefault(); // Prevent the default form submission
-  // canvas.style.display='block';
-  canvas.style.opacity="1";
-  document.querySelector('.input').style.display = "none";
-  console.log("submit");
+// Function to handle form submission
+function handleFormSubmission(event) {
+    event.preventDefault(); // Prevent the default form submission
+    canvas.style.opacity = "1";
+    document.querySelector('.input').style.display = "none";
+    registerinputing=true;
+    if(event.target.elements.Company){
+      console.log("company");
+    }else if(event.target.elements.confirmPassword){
+      console.log("new user");
+    }else if(event.target.elements.companyName){
+      console.log("register company");
+    }else{
+      console.log("old user");
+    }
+}
+
+// Add event listener to the parent element using event delegation
+document.querySelector('.input').addEventListener("submit", function (event) {
+  console.log(event,"before sub form")
+    if (event.target && event.target.tagName.toLowerCase() === 'form') {
+        // Only handle events on the 'form' element
+        handleFormSubmission(event);
+    }
 });
+
+
 
 var userTypeElements = document.querySelectorAll(".userTypes .type");
 
@@ -226,8 +307,7 @@ userTypeElements.forEach(function (element) {
         // Display the clicked element's value
         var clickedValue = this.textContent; // or this.innerText
         userType=clickedValue;
-        console.log(userType);
-        canvas.style.opacity="1";
+        inputing=true;
         document.querySelector('.userTypes').style.display='none';
     });
 });
@@ -317,7 +397,7 @@ function LoadModel(){
     // Play the animation
     repAnimationAction.play();
     repMixer.update(clock.getDelta())
-})
+  })
 }
 
 

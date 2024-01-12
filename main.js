@@ -58,7 +58,7 @@ scene.add( amblight );
 LoadModel();
 RAF();
 
-var userType=null, inputing=false, registerinputing=true;
+var userType=null, inputing=false, registerinputing=true, count=0;
 
 
 // world
@@ -120,6 +120,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
       this.animationmap.forEach( function( value,key ) {
           if( key == currentAction )
           {
+            console.log(value.play())
               value.play()
           }
           
@@ -168,28 +169,41 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
         // Walk Velocity
           const velocity =  this.walkVelocity;
           
-           // move model
+          //  move model
           const moveX =  velocity * delta
           const moveZ = velocity * delta
         
           if(keysPressed['w']){
             this.model.position.x-=moveX;
+           
           }else if(keysPressed['s']){
             this.model.position.x+=moveX;
+            
           }else if(keysPressed['a']){
             this.model.position.x-=moveX/2;
             this.model.position.z+=moveZ;
           }else if(keysPressed['d']){
+         
             this.model.position.x-=moveX/2;
             this.model.position.z-=moveZ;
+          //   this.model.rotateY(Math.PI / 2);
+          //   const distance = 10; // Adjust the distance from the model
+          //   const angle = this.model.rotation.y;
+          //   const offsetX = Math.sin(angle) * distance;
+          //   const offsetZ = Math.cos(angle) * distance;
+
+          //   this.camera.position.x = this.model.position.x + offsetX;
+          //   this.camera.position.z = this.model.position.z + offsetZ;
+          //   this.camera.position.y = this.model.position.y + 2;
           }
 
+          
           
           this.cameraTarget.x = this.model.position.x;
           this.cameraTarget.y = this.model.position.y+2;
           this.cameraTarget.z = this.model.position.z;
           this.orbitControl.target = this.cameraTarget;
-
+       
 
           //input for the user login 
           if(!loading){
@@ -243,7 +257,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
 
           //move to receiption page
           if(!loading ){
-            if((this.model.position.x>-380 && this.model.position.x<-370)&&(this.model.position.z>-130 && this.model.position.z<-105) && registerinputing){
+            if((this.model.position.x>-30 && this.model.position.x<-10)&&(this.model.position.z>-130 && this.model.position.z<-105) && registerinputing){
               registerinputing=false;
               canvas.style.opacity="0.2";
               document.querySelector('.input').style.display='block';
@@ -271,6 +285,35 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
 
 })();
 
+
+function loadLobby(){
+  const loader = new GLTFLoader();
+
+  // Load the 3D model
+  loader.load("./src/mersus_office.glb",  (gltf)=> {
+        gltf.scene.traverse(c=>{
+          c.castShadow=true;
+        });
+    // Create multiple instances of the model
+    for (let i = 1  ; i <= count; i++) {
+      console.log(i, i*50);
+     
+      const clonedModel = gltf.scene.clone();
+
+        // Adjust position for each instance
+        clonedModel.position.set(i * 200, 0, -240);
+
+        // Adjust scale for each instance
+        clonedModel.scale.set(10, 10, 10);
+        clonedModel.rotation.y = THREE.MathUtils.degToRad(-80);
+
+        // Add each instance to the scene
+        scene.add(clonedModel);
+    }
+  });
+
+}
+
 // Function to handle form submission
 function handleFormSubmission(event) {
     event.preventDefault(); // Prevent the default form submission
@@ -278,19 +321,26 @@ function handleFormSubmission(event) {
     document.querySelector('.input').style.display = "none";
     registerinputing=true;
     if(event.target.elements.Company){
+      count=1;
+      loadLobby();
       console.log("company");
     }else if(event.target.elements.confirmPassword){
+      count=0;
+      loadLobby();
       console.log("new user");
     }else if(event.target.elements.companyName){
       console.log("register company");
     }else{
+      count=4;
+      loadLobby();
       console.log("old user");
+
     }
 }
 
 // Add event listener to the parent element using event delegation
 document.querySelector('.input').addEventListener("submit", function (event) {
-  console.log(event,"before sub form")
+
     if (event.target && event.target.tagName.toLowerCase() === 'form') {
         // Only handle events on the 'form' element
         handleFormSubmission(event);
@@ -323,7 +373,7 @@ function LoadModel(){
     gltf.scene.traverse(c=>{
       c.castShadow=true;
     });
-    gltf.scene.position.set(-350, 23, 0);
+    gltf.scene.position.set(0, 23, 0);
     scene.add(gltf.scene);
   },function(xhr) {
 
@@ -348,13 +398,12 @@ function LoadModel(){
           {
               object.castShadow = true;
           }
-          model.position.set(0, 0, -120);
+          model.position.set(350, 0, -120);
           model.scale.set(12, 12, 12);
           model.rotation.y = THREE.MathUtils.degToRad(80);
 
           scene.add(model)
       })
-
       var gltfanimations = gltf.animations // getting all gltf animation clips from gltf model
       var mixer = new THREE.AnimationMixer(model) // will convert all animation clips into animation actions using mixer which helps into fading in or fading out animations for smooth animations transition
       var animationmap = new Map()
@@ -372,6 +421,40 @@ function LoadModel(){
   })
 
 
+  //another user model
+//   {charLoader.load("./src/human/scene.gltf", (gltf)=> {
+//     const model = gltf.scene
+//     model.traverse( (object)=>{
+//         if(object.isMesh)
+//         {
+//             object.castShadow = true;
+//         }
+//         model.position.set(300, 0, -120);
+//         model.scale.set(.12, .12, .12);
+//         // model.rotation.y = THREE.MathUtils.degToRad(80);
+
+//         scene.add(model)
+//     })
+
+//     const mixer = new THREE.AnimationMixer(model);
+//     // if (gltf.animations && gltf.animations.length > 0) {
+//         // gltf.animations.forEach((animation) => {
+//           // console.log(animation);
+//         const animationAction = mixer.clipAction(gltf.animations[0]);
+//         console.log(animationAction);
+//         // Assuming you have an AnimationAction named 'animationAction'
+// animationAction.setLoop(THREE.LoopRepeat);
+// // Assuming you have an AnimationAction named 'animationAction'
+// animationAction.reset().play();
+// // Assuming you have an AnimationMixer named 'mixer'
+// mixer.update(clock.getDelta());
+
+//     // });
+//   // }
+//   })}
+
+
+
   //load reception model
 
   charLoader.load("./src/reception.glb", (gltf)=> {
@@ -381,7 +464,7 @@ function LoadModel(){
         {
             object.castShadow = true;
         }
-        model.position.set(-400, 0, -120);
+        model.position.set(-30, 0, -120);
         model.scale.set(10, 10, 10);
         model.rotation.y = THREE.MathUtils.degToRad(90);
         scene.add(model)

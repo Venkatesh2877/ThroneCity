@@ -120,7 +120,6 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
       this.animationmap.forEach( function( value,key ) {
           if( key == currentAction )
           {
-            console.log(value.play())
               value.play()
           }
           
@@ -169,21 +168,18 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
         // Walk Velocity
           const velocity =  this.walkVelocity;
           
-          //  move model
+           // move model
           const moveX =  velocity * delta
           const moveZ = velocity * delta
         
           if(keysPressed['w']){
             this.model.position.x-=moveX;
-           
           }else if(keysPressed['s']){
             this.model.position.x+=moveX;
-            
           }else if(keysPressed['a']){
             this.model.position.x-=moveX/2;
             this.model.position.z+=moveZ;
           }else if(keysPressed['d']){
-         
             this.model.position.x-=moveX/2;
             this.model.position.z-=moveZ;
           //   this.model.rotateY(Math.PI / 2);
@@ -198,12 +194,11 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
           }
 
           
-          
           this.cameraTarget.x = this.model.position.x;
           this.cameraTarget.y = this.model.position.y+2;
           this.cameraTarget.z = this.model.position.z;
           this.orbitControl.target = this.cameraTarget;
-       
+
 
           //input for the user login 
           if(!loading){

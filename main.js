@@ -4,7 +4,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import {FontLoader} from 'three/examples/jsm/loaders/FontLoader'
+import {FontLoader} from 'three/examples/jsm/loaders/FontLoader';
+import { camera, light, amblight } from "./cameraSceneLight.js";
+import {plane} from './floor.js'
+import {newUserFormHTML, clientUserFormHTML, registerCompanyFormHTML} from './inputForm.js';
 
 const canvas = document.querySelector(".webgl");
 const renderer = new THREE.WebGLRenderer({canvas});
@@ -22,37 +25,8 @@ const DIRECTIONS = ['w', 'a', 's', 'd'];
 
 // Scene
 const scene = new THREE.Scene();
-
-
-// Camera
-const fov=60;
-const aspect= window.innerWidth/window.innerHeight;
-const near=1.00;
-const far=10000.0;
-
-const camera = new THREE.PerspectiveCamera(fov, aspect,near,far);
-camera.position.set(100,100,0);
 scene.add(camera);
-
-
-// // Light
-const light = new THREE.DirectionalLight(0xffffff);
-light.position.set(100, 100, 100);
-light.target.position.set(0,0,0);
-light.castShadow=true;
-light.shadow.bias=-0.01;
-light.shadow.mapSize.width=2048;
-light.shadow.mapSize.height=2048;
-light.shadow.camera.near=1.0;
-light.shadow.camera.far=500;
-light.shadow.camera.left=200;
-light.shadow.camera.right=-200;
-light.shadow.camera.top=200;
-light.shadow.camera.bottom=-200;
 scene.add(light);
-
-
-const amblight = new THREE.AmbientLight( 0xFFFFFF ); // soft white light
 scene.add( amblight );
 
 LoadModel();
@@ -73,19 +47,7 @@ const texture= loader.load([
 ]);
 scene.background= texture;
 
-//floor
-const planeGeometry = new THREE.PlaneGeometry(1000, 1000, 1, 1);
-const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-
-// Load an image texture
-const textureLoader = new THREE.TextureLoader();
-const textur = textureLoader.load('./src/res/nasa--hI5dX2ObAs-unsplash.jpg'); // Replace with the actual path to your image
-planeMaterial.map = textur;
-
-const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-plane.castShadow=false;
-plane.receiveShadow=true;
-plane.rotation.x= -Math.PI/2;
+//floor Load using image texture
 scene.add(plane);
 
 
@@ -219,18 +181,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
               newForm.id = "myForm"; // Set the same ID as the original form
 
               // Add new content to the form
-              newForm.innerHTML = `
-              <label for="username">Username:</label>
-              <input type="text" id="username" name="username" >
-      
-              <label for="password">Password:</label>
-              <input type="password" id="password" name="password" >
-              
-              <label for="confirmPassword">Confirm Password:</label>
-              <input type="password" id="confirmPassword" name="confirmPassword">
-      
-              <button type="submit">Submit</button>
-              `;
+              newForm.innerHTML = newUserFormHTML;
               document.querySelector('.input').replaceChildren(newForm);
 
 
@@ -241,11 +192,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
               newForm.id = "myForm"; // Set the same ID as the original form
 
               // Add new content to the form
-              newForm.innerHTML = `
-              <label for="Company ID">Company Id:</label>
-              <input type="text" id="Company" name="Company" >
-              <button type="submit">Submit</button>
-              `;
+              newForm.innerHTML = clientUserFormHTML;
               document.querySelector('.input').replaceChildren(newForm);
             }
           }
@@ -260,15 +207,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
               newForm.id = "myForm"; 
 
               // Add new content to the form
-              newForm.innerHTML = `
-              <label for="companyName">Company Name:</label>
-              <input type="text" id="companyName" name="companyName" >
-      
-              <label for="document">Company document:</label>
-              <input type="file" id="document" name="document" >
-              
-              <button type="submit">Submit</button>
-              `;
+              newForm.innerHTML = registerCompanyFormHTML;
               document.querySelector('.input').replaceChildren(newForm);
             }
           }

@@ -21,8 +21,29 @@ const registerCompanyFormHTML=`
 <label for="companyName">Company Name:</label>
 <input type="text" id="companyName" name="companyName" >
 
-<label for="document">Company document:</label>
-<input type="file" id="document" name="document" >
+<label for="id">Company id:</label>
+<input type="text" id="id" name="id" >
+
+<label for="bankName">Bank Name:</label>
+<input type="text" id="bankName" name="bankName" >
+
+<label for="legalStatus">Legal status:</label>
+<input type="text" id="legalStatus" name="legalStatus" >
+
+<label for="shareHolderName">Share Holder Name:</label>
+<input type="text" id="shareHolderName" name="shareHolderName" >
+
+<label for="roleInCompany">Role In Company:</label>
+<input type="text" id="roleInCompany" name="roleInCompany" >
+
+<label for="passport">Passport:</label>
+<input type="file" id="passport" name="passport" >
+
+<label for="emirateID">Emirate ID:</label>
+<input type="file" id="emirateID" name="emirateID" >
+
+<label for="bankStatement">Bank Statement:</label>
+<input type="file" id="bankStatement" name="bankStatement" >
 
 <button type="submit">Submit</button>
 `;

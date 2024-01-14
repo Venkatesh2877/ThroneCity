@@ -80,6 +80,30 @@ function loadLobby(body){
               }
             ) 
         }
+      } else if(body.task){
+        gltf.scene.position.set(200*list.length, 0, -240);
+        gltf.scene.scale.set(10,10,10);
+        gltf.scene.rotation.y= THREE.MathUtils.degToRad(-80);
+        scene.add(gltf.scene);
+        
+
+        const fontLoader=new FontLoader();
+        fontLoader.load(
+          'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
+          (droidFont)=>{
+            const textGeometry= new TextGeometry(list[list.length-1].companyName,{
+              height:2,
+              size:5,
+              font:droidFont,
+            });
+            const textMaterial=new THREE.MeshNormalMaterial();
+            const textMesh=new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.position.set(200*list.length,35,-180);
+            // textMesh.position.x=350;
+            // textMesh.position.z=-120;
+            scene.add(textMesh);
+          }
+        )       
       }    
     });
   
@@ -100,6 +124,15 @@ function handleFormSubmission(event) {
       console.log("new user");
     }else if(event.target.elements.companyName){
       console.log("register company");
+      list.push({
+        companyName:event.target.elements.companyName.value, id:event.target.elements.id.value, bankName:event.target.elements.bankName.value,
+        legalStatus:event.target.elements.legalStatus.value, shareHolderName:event.target.elements.shareHolderName.value, 
+        roleInCompany:event.target.elements.roleInCompany.value, passport:event.target.elements.passport.value, 
+        emirateID:event.target.elements.emirateID.value, bankStatement:event.target.elements.bankStatement.value,
+      });
+      console.log(list);
+      loadLobby({task:"newCompany"})
+
     }else{
       count=4;
       loadLobby({userName:event.target.username, password:event.target.password});

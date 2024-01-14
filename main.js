@@ -1,10 +1,11 @@
-
 import * as THREE from "three";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { camera, light, amblight } from "./cameraSceneLight.js";
 import {plane} from './floor.js'
 import {CharacterControls,loading,changeLoading, userType,updateUserType, inputing,updateInputing,updateRegisterInputing} from './characterControls.js'
+import { handleFormSubmission } from "./functions.js";
+
 
 export const canvas = document.querySelector(".webgl");
 const renderer = new THREE.WebGLRenderer({canvas});
@@ -21,15 +22,13 @@ document.body.appendChild(renderer.domElement);
 
 
 // Scene
-const scene = new THREE.Scene();
+export const scene = new THREE.Scene();
 scene.add(camera);
 scene.add(light);
 scene.add( amblight );
 
 LoadModel();
 RAF();
-
-var count=0;
 
 
 // world
@@ -59,62 +58,8 @@ orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
 
 
 
-
-function loadLobby(){
-  const loader = new GLTFLoader();
-
-  // Load the 3D model
-  loader.load("./src/mersus_office.glb",  (gltf)=> {
-        gltf.scene.traverse(c=>{
-          c.castShadow=true;
-        });
-    // Create multiple instances of the model
-    for (let i = 1  ; i <= count; i++) {
-      console.log(i, i*50);
-     
-      const clonedModel = gltf.scene.clone();
-
-        // Adjust position for each instance
-        clonedModel.position.set(i * 200, 0, -240);
-
-        // Adjust scale for each instance
-        clonedModel.scale.set(10, 10, 10);
-        clonedModel.rotation.y = THREE.MathUtils.degToRad(-80);
-
-        // Add each instance to the scene
-        scene.add(clonedModel);
-    }
-  });
-
-}
-
-// Function to handle form submission
-function handleFormSubmission(event) {
-    event.preventDefault(); // Prevent the default form submission
-    canvas.style.opacity = "1";
-    document.querySelector('.input').style.display = "none";
-    // updateRegisterInputing(true);
-    if(event.target.elements.Company){
-      count=1;
-      loadLobby();
-      console.log("company");
-    }else if(event.target.elements.confirmPassword){
-      count=0;
-      loadLobby();
-      console.log("new user");
-    }else if(event.target.elements.companyName){
-      console.log("register company");
-    }else{
-      count=4;
-      loadLobby();
-      console.log("old user");
-
-    }
-}
-
 // Add event listener to the parent element using event delegation
 document.querySelector('.input').addEventListener("submit", function (event) {
-
     if (event.target && event.target.tagName.toLowerCase() === 'form') {
         // Only handle events on the 'form' element
         handleFormSubmission(event);
@@ -195,37 +140,35 @@ function LoadModel(){
   })
 
 
-  //another user model
-//   {charLoader.load("./src/human/scene.gltf", (gltf)=> {
-//     const model = gltf.scene
-//     model.traverse( (object)=>{
-//         if(object.isMesh)
-//         {
-//             object.castShadow = true;
-//         }
-//         model.position.set(300, 0, -120);
-//         model.scale.set(.12, .12, .12);
-//         // model.rotation.y = THREE.MathUtils.degToRad(80);
+  // //another user model
+  // {charLoader.load("./src/human/scene.gltf", (gltf)=> {
+  //   const model = gltf.scene
+  //   model.traverse( (object)=>{
+  //       if(object.isMesh)
+  //       {
+  //           object.castShadow = true;
+  //       }
+  //       model.position.set(300, 0, -120);
+  //       model.scale.set(.12, .12, .12);
+  //       // model.rotation.y = THREE.MathUtils.degToRad(80);
 
-//         scene.add(model)
-//     })
+  //       scene.add(model)
+  //   })
 
-//     const mixer = new THREE.AnimationMixer(model);
-//     // if (gltf.animations && gltf.animations.length > 0) {
-//         // gltf.animations.forEach((animation) => {
-//           // console.log(animation);
-//         const animationAction = mixer.clipAction(gltf.animations[0]);
-//         console.log(animationAction);
-//         // Assuming you have an AnimationAction named 'animationAction'
-// animationAction.setLoop(THREE.LoopRepeat);
-// // Assuming you have an AnimationAction named 'animationAction'
-// animationAction.reset().play();
-// // Assuming you have an AnimationMixer named 'mixer'
-// mixer.update(clock.getDelta());
+  //   var humanGltfanimations = gltf.animations // getting all gltf animation clips from gltf model
+  //   var humanMixer = new THREE.AnimationMixer(model) // will convert all animation clips into animation actions using mixer which helps into fading in or fading out animations for smooth animations transition
+  //   var humanAnimationClip = humanGltfanimations[0];
+  //   console.log(humanAnimationClip);
+  //   // Create an animation action
+  //   var humanAnimationAction = humanMixer.clipAction(humanAnimationClip);
+    
+  //   // Play the animation
+  //   humanAnimationAction.play();
+  //   humanMixer.update(clock.getDelta())
 
-//     // });
-//   // }
-//   })}
+  //   // });
+  // // }
+  // })}
 
 
 

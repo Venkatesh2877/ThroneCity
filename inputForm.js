@@ -13,7 +13,7 @@ const newUserFormHTML = `
 
 const clientUserFormHTML=`
 <label for="Company ID">Company Id:</label>
-<input type="text" id="Company" name="Company" >
+<input type="text" id="Company" name="Company required" >
 <button type="submit">Submit</button>
 `;
 

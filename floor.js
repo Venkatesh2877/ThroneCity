@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-const planeGeometry = new THREE.PlaneGeometry(1000, 1000, 1, 1);
+const planeGeometry = new THREE.PlaneGeometry(10000, 10000, 1, 1);
 const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
 
 const textureLoader = new THREE.TextureLoader();

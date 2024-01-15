@@ -1,19 +1,17 @@
 import { scene, canvas } from "./main";
 import * as THREE from "three";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-// import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-// import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import {TextGeometry} from 'three/examples/jsm/geometries/TextGeometry';
 import {TTFLoader} from 'three/examples/jsm/loaders/TTFLoader';
 import {FontLoader} from 'three/examples/jsm/loaders/FontLoader';
 
 
-var count=0;
+
 var formData = new FormData();
-var list=[{companyName:"Company1", id:"company0001", bankName:"Bank of America",legalStatus:"Legal",shareHolderName:"Venkatesh", roleInCompany:"Associate", passport:"", emirateID:"", bankStatement:""},
-{companyName:"Company2", id:"company0002", bankName:"SBI",legalStatus:"Illegal",shareHolderName:"Karthick", roleInCompany:"Associate", passport:"", emirateID:"", bankStatement:""},
-{companyName:"Company3", id:"company0003", bankName:"Bank of Baroda",legalStatus:"Illegal",shareHolderName:"Ali", roleInCompany:"Manager", passport:"", emirateID:"", bankStatement:""},
-{companyName:"Company4", id:"company0004", bankName:"Canada Bank",legalStatus:"Legal",shareHolderName:"Vishnu", roleInCompany:"CTO", passport:"", emirateID:"", bankStatement:""}]
+export var list=[{companyName:"Company1", id:"company0001", bankName:"Bank of America",legalStatus:"Legal",shareHolderName:"Venkatesh", roleInCompany:"Associate", passport:"./src/assets/dummy.pdf", emirateID:"./src/assets/dummy.pdf", bankStatement:"./src/assets/dummy.pdf"},
+{companyName:"Company2", id:"company0002", bankName:"SBI",legalStatus:"Illegal",shareHolderName:"Karthick", roleInCompany:"Associate", passport:"./src/assets/dummy.pdf", emirateID:"./src/assets/dummy.pdf", bankStatement:"./src/assets/dummy.pdf"},
+{companyName:"Company3", id:"company0003", bankName:"Bank of Baroda",legalStatus:"Illegal",shareHolderName:"Ali", roleInCompany:"Manager", passport:"./src/assets/dummy.pdf", emirateID:"./src/assets/dummy.pdf", bankStatement:"./src/assets/dummy.pdf"},
+{companyName:"Company4", id:"company0004", bankName:"Canada Bank",legalStatus:"Legal",shareHolderName:"Vishnu", roleInCompany:"CTO", passport:"./src/assets/dummy.pdf", emirateID:"./src/assets/dummy.pdf", bankStatement:"./src/assets/dummy.pdf"}]
 
 
 
@@ -60,8 +58,6 @@ function loadLobby(body){
             clonedModel.scale.set(10, 10, 10);
             clonedModel.rotation.y = THREE.MathUtils.degToRad(-80);
             scene.add(clonedModel);
-
-            console.log(list[i-1])
             const fontLoader=new FontLoader();
             fontLoader.load(
               'node_modules/three/examples/fonts/droid/droid_sans_mono_regular.typeface.json',
@@ -74,8 +70,6 @@ function loadLobby(body){
                 const textMaterial=new THREE.MeshNormalMaterial();
                 const textMesh=new THREE.Mesh(textGeometry, textMaterial);
                 textMesh.position.set((i*200),35,-180);
-                // textMesh.position.x=350;
-                // textMesh.position.z=-120;
                 scene.add(textMesh);
               }
             ) 
@@ -114,14 +108,16 @@ function handleFormSubmission(event) {
     event.preventDefault(); // Prevent the default form submission
     canvas.style.opacity = "1";
     document.querySelector('.input').style.display = "none";
+
     if(event.target.elements.Company){
-      count=1;
       loadLobby({companyId:event.target.Company.value});
       console.log("company");
+      sessionStorage.setItem("companyId", event.target.Company.value);
+
     }else if(event.target.elements.confirmPassword){
-      count=0;
       //loadLobby({userName:event.target.username, password:event.target.password, confirmPassword:event.target.confirmPassword});
       console.log("new user");
+      
     }else if(event.target.elements.companyName){
       console.log("register company");
       list.push({
@@ -134,11 +130,45 @@ function handleFormSubmission(event) {
       loadLobby({task:"newCompany"})
 
     }else{
-      count=4;
-      loadLobby({userName:event.target.username, password:event.target.password});
+      loadLobby({userName:event.target.username.value, password:event.target.password.value});
       console.log("old user");
-
+      sessionStorage.setItem("username", event.target.username.value);
     }
 }
 
-export {handleFormSubmission};
+var companyListElement = document.getElementById('displayCompanyDetail');
+
+const handleCancel=()=>{
+  console.log("clicked")
+  canvas.style.opacity=1;
+  companyListElement.innerHTML="";
+}
+
+function displayDetail(list){
+  // Populate the company list
+
+    canvas.style.opacity=0.2;
+    companyListElement.innerHTML=`
+    <h1>Company Name: ${list.companyName}</h1>
+    <h2>Company Id: ${list.id}</h2>
+    <h2>Bank Name: ${list.bankName}</h2>
+    <h2>Legal Status: ${list.legalStatus}</h2>
+    <h2>Share Holder Name: ${list.shareHolderName}</h2>
+    <h2>Role In Company: ${list.roleInCompany}</h2>
+    <div><a href="${list.passport}" target="_blank">Passport</a></div>
+    <div><a href="${list.emirateID}" target="_blank">Emirate ID</a></div>
+    <div><a href="${list.bankStatement}" target="_blank">Bank Statement</a></div>
+  `;
+  
+   // Create a button element
+   var button = document.createElement("button");
+   button.textContent = "Cancel";
+
+   button.onclick = handleCancel;
+
+   // Append the button to the div
+   companyListElement.appendChild(button);
+
+}
+
+export {handleFormSubmission, displayDetail};

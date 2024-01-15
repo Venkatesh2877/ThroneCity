@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import {newUserFormHTML, clientUserFormHTML, registerCompanyFormHTML} from './inputForm.js';
 import { canvas } from "./main.js";
-
+import { list,displayDetail} from "./functions.js";
 
 const DIRECTIONS = ['w', 'a', 's', 'd'];
 var loading= true;
@@ -174,9 +174,31 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
               }
             }
             
+            //when moved into company building
   
-  
-          }  
+            if(!loading){
+              if(sessionStorage.getItem('companyId')){
+                if((this.model.position.x>180 && this.model.position.x<250)&&(this.model.position.z>-180 && this.model.position.z<-160)){
+                  // console.log("entered ", sessionStorage.getItem('companyId'));
+                  const filteredList = list.filter((e) => {
+                    return e.id === sessionStorage.getItem('companyId');
+                  });
+                  console.log(filteredList[0]);
+                  displayDetail(filteredList[0]);
+                }
+              }else if(sessionStorage.getItem('username')){
+                const length=list.length;
+              // const length=4;
+                for(var i=1;i<=length;i++){
+                  if((this.model.position.x>(i*200)-20 && this.model.position.x<(i*200)+50)&&(this.model.position.z>-180 && this.model.position.z<-160)){
+                    // console.log("enter comapm", list[Math.floor((i*200)/200)-1]);
+                    displayDetail(list[Math.floor((i*200)/200)-1]);
+                }
+              }
+            }
+          }
+
+        }  
     return CharacterControls // Constructor function returning the definition of the class CharacterControls
   
   })();

@@ -4,7 +4,7 @@ import { canvas } from "./main.js";
 import { list,displayDetail} from "./functions.js";
 
 const DIRECTIONS = ['w', 'a', 's', 'd'];
-var loading= true;
+var loading= true,right=true, left=true, faceXPos=false, faceXNeg=true, faceZPos=false, faceZNeg=false;
 
 const changeLoading=(value)=>{
     loading=value;
@@ -97,36 +97,96 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
             const moveZ = velocity * delta
 
             if(keysPressed['w']){
-              this.model.position.x-=moveX;
+              
+              if(faceXNeg){
+                this.model.position.x-=moveX;
+              }else if(faceXPos){
+                this.model.position.x+=moveX;
+              }else if(faceZNeg){
+                this.model.position.z-=moveZ;
+              }else{
+                this.model.position.z+=moveZ;
+              }
+              left=true;
+              right=true;
             }else if(keysPressed['s']){
-              this.model.position.x+=moveX;
+              if(faceXNeg){
+                this.model.position.x+=moveX;
+              }else if(faceXPos){
+                this.model.position.x-=moveX;
+              }else if(faceZNeg){
+                this.model.position.z+=moveZ;
+              }else{
+                this.model.position.z-=moveZ;
+              }
+              left=true;
+              right=true;
             }else if(keysPressed['a']){
-              this.model.position.x-=moveX/2;
-              this.model.position.z+=moveZ;
-              // this.model.rotateY(-Math.PI / 2);
-              // const distance = 10; // Adjust the distance from the model
-              // const angle = this.model.rotation.y;
-              // const offsetX = Math.sin(angle) * distance;
-              // const offsetZ = Math.cos(angle) * distance;
-  
-              // this.camera.position.x = this.model.position.x + offsetX;
-              // this.camera.position.z = this.model.position.z + offsetZ;
-              // this.camera.position.y = this.model.position.y + 2;
-              // console.log(this.model.rotation)
+              
+              // this.model.position.x-=moveX/2;
+              // this.model.position.z+=moveZ;
+              if(left){
+
+                if(faceXNeg){
+                  faceXNeg=false;
+                  faceZPos=true;
+                }else if(faceZPos){
+                  faceZPos=false;
+                  faceXPos=true;
+                }else if(faceXPos){
+                  faceXPos=false;
+                  faceZNeg=true;
+                }else{
+                  faceZNeg=false;
+                  faceXNeg=true;
+                }
+
+
+                this.model.rotateY(+Math.PI / 2);
+                const distance = 10; // Adjust the distance from the model
+                const angle = this.model.rotation.y;
+                const offsetX = Math.sin(angle) * distance;
+                const offsetZ = Math.cos(angle) * distance;
+    
+                this.camera.position.x = this.model.position.x + offsetX;
+                this.camera.position.z = this.model.position.z + offsetZ;
+                this.camera.position.y = this.model.position.y + 2;
+                console.log(this.model.rotation)
+                left=false;
+              }
             }else if(keysPressed['d']){
-              this.model.position.x-=moveX/2;
-              this.model.position.z-=moveZ;
-              // this.model.rotateY(Math.PI / 2);
-              // const distance = 10; // Adjust the distance from the model
-              // const angle = this.model.rotation.y;
-              // const offsetX = Math.sin(angle) * distance;
-              // const offsetZ = Math.cos(angle) * distance;
+              // this.model.position.x-=moveX/2;
+              // this.model.position.z-=moveZ;
+              
+              if(right){
+
+                if(faceXNeg){
+                  faceXNeg=false;
+                  faceZNeg=true;
+                }else if(faceZNeg){
+                  faceZNeg=false;
+                  faceXPos=true;
+                }else if(faceXPos){
+                  faceXPos=false;
+                  faceZPos=true;
+                }else{
+                  faceZPos=false;
+                  faceXNeg=true;
+                }
+
+
+              this.model.rotateY(-Math.PI / 2);
+              const distance = 10; // Adjust the distance from the model
+              const angle = this.model.rotation.y;
+              const offsetX = Math.sin(angle) * distance;
+              const offsetZ = Math.cos(angle) * distance;
   
-              // this.camera.position.x = this.model.position.x + offsetX;
-              // this.camera.position.z = this.model.position.z + offsetZ;
-              // this.camera.position.y = this.model.position.y + 2;
-              // console.log(this.camera.position.x,this.camera.position.z)
-  
+              this.camera.position.x = this.model.position.x + offsetX;
+              this.camera.position.z = this.model.position.z + offsetZ;
+              this.camera.position.y = this.model.position.y + 2;
+              console.log(this.model.rotation);
+              right=false;
+              }
             }
   
             

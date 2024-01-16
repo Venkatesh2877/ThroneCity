@@ -76,3 +76,8 @@ canvas{
         font-size: 2rem;
     }
 }
+
+#displayCompanyDetail{
+    position: absolute;
+    z-index: 2;
+}

@@ -95,7 +95,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
              // move model
             const moveX =  velocity * delta
             const moveZ = velocity * delta
-          
+
             if(keysPressed['w']){
               this.model.position.x-=moveX;
             }else if(keysPressed['s']){
@@ -103,18 +103,30 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
             }else if(keysPressed['a']){
               this.model.position.x-=moveX/2;
               this.model.position.z+=moveZ;
+              // this.model.rotateY(-Math.PI / 2);
+              // const distance = 10; // Adjust the distance from the model
+              // const angle = this.model.rotation.y;
+              // const offsetX = Math.sin(angle) * distance;
+              // const offsetZ = Math.cos(angle) * distance;
+  
+              // this.camera.position.x = this.model.position.x + offsetX;
+              // this.camera.position.z = this.model.position.z + offsetZ;
+              // this.camera.position.y = this.model.position.y + 2;
+              // console.log(this.model.rotation)
             }else if(keysPressed['d']){
               this.model.position.x-=moveX/2;
               this.model.position.z-=moveZ;
-            //   this.model.rotateY(Math.PI / 2);
-            //   const distance = 10; // Adjust the distance from the model
-            //   const angle = this.model.rotation.y;
-            //   const offsetX = Math.sin(angle) * distance;
-            //   const offsetZ = Math.cos(angle) * distance;
+              // this.model.rotateY(Math.PI / 2);
+              // const distance = 10; // Adjust the distance from the model
+              // const angle = this.model.rotation.y;
+              // const offsetX = Math.sin(angle) * distance;
+              // const offsetZ = Math.cos(angle) * distance;
   
-            //   this.camera.position.x = this.model.position.x + offsetX;
-            //   this.camera.position.z = this.model.position.z + offsetZ;
-            //   this.camera.position.y = this.model.position.y + 2;
+              // this.camera.position.x = this.model.position.x + offsetX;
+              // this.camera.position.z = this.model.position.z + offsetZ;
+              // this.camera.position.y = this.model.position.y + 2;
+              // console.log(this.camera.position.x,this.camera.position.z)
+  
             }
   
             
@@ -175,7 +187,6 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
             }
             
             //when moved into company building
-  
             if(!loading){
               if(sessionStorage.getItem('companyId')){
                 if((this.model.position.x>180 && this.model.position.x<250)&&(this.model.position.z>-180 && this.model.position.z<-160)){
@@ -183,8 +194,8 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
                   const filteredList = list.filter((e) => {
                     return e.id === sessionStorage.getItem('companyId');
                   });
-                  console.log(filteredList[0]);
                   displayDetail(filteredList[0]);
+                  // this.model.position.x=175;
                 }
               }else if(sessionStorage.getItem('username')){
                 const length=list.length;
@@ -193,6 +204,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
                   if((this.model.position.x>(i*200)-20 && this.model.position.x<(i*200)+50)&&(this.model.position.z>-180 && this.model.position.z<-160)){
                     // console.log("enter comapm", list[Math.floor((i*200)/200)-1]);
                     displayDetail(list[Math.floor((i*200)/200)-1]);
+                    // this.model.position.x=175;
                 }
               }
             }

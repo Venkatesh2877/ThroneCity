@@ -144,6 +144,8 @@ const handleCancel=()=>{
   companyListElement.innerHTML="";
 }
 
+
+//display each company detail
 function displayDetail(list){
   // Populate the company list
 

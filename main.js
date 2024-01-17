@@ -87,8 +87,10 @@ var characterControl;
 
 function LoadModel(){
 
-  //load building
   const loader=new GLTFLoader();
+  const fbxLoader = new FBXLoader();
+
+  //load building
   loader.load('src/office1.glb', (gltf)=>{
     gltf.scene.traverse(c=>{
       c.castShadow=true;
@@ -109,88 +111,51 @@ function LoadModel(){
     }
   })
 
-  //load the character
-  const charLoader= new GLTFLoader();
-    charLoader.load("./src/dist/model/Soldier.glb", (gltf)=> {
-      const model = gltf.scene
+  
+
+  //another user model
+  fbxLoader.load("./src/character.fbx", (fbx) => {
+    const model = fbx;
       model.traverse( (object)=>{
           if(object.isMesh)
           {
               object.castShadow = true;
           }
-          model.position.set(350, 0, -120);
-          model.scale.set(12, 12, 12);
-          model.rotation.y = THREE.MathUtils.degToRad(80);
-
-          scene.add(model)
       })
-      var gltfanimations = gltf.animations // getting all gltf animation clips from gltf model
-      var mixer = new THREE.AnimationMixer(model) // will convert all animation clips into animation actions using mixer which helps into fading in or fading out animations for smooth animations transition
-      var animationmap = new Map()
 
-      gltfanimations=gltfanimations.filter( ( a )=> // This function filter out all animations which are not T-Pose
-        a.name != "TPose"
-      )
-    
-      gltfanimations.forEach( ( a )=> // For all of those animations which are filtered out and which are not T-Pose will be converted into AnimationClips  
-      animationmap.set(a.name , mixer.clipAction(a))
-      )
+      model.position.set(350, 0, -120);
+      model.scale.set(0.12, 0.12, 0.12);
+      model.rotation.y = THREE.MathUtils.degToRad(-90);
+
       
-      // INSTANTIATING CHARACTERCONTROLS
-      characterControl = new CharacterControls( model, mixer, animationmap, orbitControls, camera, 'Idle');
-  })
 
 
-  // //another user model
-  // const fbxLoader = new FBXLoader();
-  // fbxLoader.load("./src/character.fbx", (fbx) => {
-  //   // fbx.scene.traverse(c=>{
-  //   //   c.castShadow=true;
-  //   // });
-  //   // fbx.scene.position.set(300, 0, 120);
-  //   // scene.add(fbx.scene);
-  //   const model = fbx;
-  //     model.traverse( (object)=>{
-  //         if(object.isMesh)
-  //         {
-  //             object.castShadow = true;
-  //         }
-  //         model.position.set(350, 0, -120);
-  //         model.scale.set(0.12, 0.12, 0.12);
-  //         model.rotation.y = THREE.MathUtils.degToRad(-80);
+      var animationmap=new Map();
+      var mixer= new THREE.AnimationMixer(model);
 
-  //         scene.add(model)
-  //     })
-      
-  //     var animations=[];
-  //     const idle = useFBX("./src/Breathing Idle.fbx");
+      const anim= new FBXLoader();
+      fbxLoader.load("./src/Breathing Idle.fbx", (anim) => {
+        animationmap.set("Idle", mixer.clipAction(anim.animations[0]));
+        mixer.clipAction(anim.animations[0]).play();
+        mixer.update(clock.getDelta());      
+      });
 
-  //     animations["idle"] = {
-  //       clip: mixer.clipAction(idle.animations[0]),
-  //     };
-    
-  //     const walk = useFBX("./src/Walking.fbx");
-    
-  //     animations["walk"] = {
-  //       clip: mixer.clipAction(walk.animations[0]),
-  //     };
-    
-  //   //   var mixer= new THREE.AnimationMixer(model);
-  //   //   const animationAction = mixer.clipAction(
-  //   //     fbx.animations[1]
-  //   // );
-  //   // console.log(animationAction);
-  //   // mixer.addAction(animationAction);
-  //   // animationAction.play();
-  //     // idleModel.visible = !isWalking; // Initially show idle model
-  // });
+    // Load walk animation
+    fbxLoader.load("./src/Walking.fbx", (walk) => {
+      animationmap.set('Walk',mixer.clipAction(walk.animations[0]));
+    });
+
+    scene.add(model);
+    characterControl = new CharacterControls( model, mixer, animationmap, orbitControls, camera, 'Idle');
+
+  });
 
  
 
 
   //load reception model
 
-  charLoader.load("./src/reception.glb", (gltf)=> {
+  loader.load("./src/reception.glb", (gltf)=> {
     const model = gltf.scene
     model.traverse( (object)=>{
         if(object.isMesh)

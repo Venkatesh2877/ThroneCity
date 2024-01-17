@@ -5,7 +5,7 @@ import * as THREE from "three";
 const fov=60;
 const aspect= window.innerWidth/window.innerHeight;
 const near=1.00;
-const far=10000.0;
+const far=100000.0;
 
 const camera = new THREE.PerspectiveCamera(fov, aspect,near,far);
 camera.position.set(100,100,0);

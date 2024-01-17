@@ -43,7 +43,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
   
         // CONSTANT DATA
         this.fadeDuration = 0.2
-        this.walkVelocity = 40
+        this.walkVelocity = 500
         this.currentAction=currentAction
         this.model = model
         this.mixer = mixer
@@ -102,29 +102,29 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
              // move model
             const moveX =  velocity * delta
             const moveZ = velocity * delta
-
+            console.log(this.model.position.x, this.model.position.z);
             if(keysPressed['w']){
               
               if(faceXNeg){
-                this.model.position.x-=moveX;
-              }else if(faceXPos){
-                this.model.position.x+=moveX;
-              }else if(faceZNeg){
                 this.model.position.z-=moveZ;
-              }else{
+              }else if(faceXPos){
                 this.model.position.z+=moveZ;
+              }else if(faceZNeg){
+                this.model.position.x+=moveX;
+              }else{
+                this.model.position.x-=moveX;
               }
               left=true;
               right=true;
             }else if(keysPressed['s']){
               if(faceXNeg){
-                this.model.position.x+=moveX;
-              }else if(faceXPos){
-                this.model.position.x-=moveX;
-              }else if(faceZNeg){
                 this.model.position.z+=moveZ;
-              }else{
+              }else if(faceXPos){
                 this.model.position.z-=moveZ;
+              }else if(faceZNeg){
+                this.model.position.x-=moveX;
+              }else{
+                this.model.position.x+=moveX;
               }
               left=true;
               right=true;
@@ -232,9 +232,9 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
               }
             }
   
-            //move to receiption page
+            //move to reception page
             if(!loading ){
-              if((this.model.position.x>-30 && this.model.position.x<-10)&&(this.model.position.z>-130 && this.model.position.z<-105) ){
+              if((this.model.position.x>3350 && this.model.position.x<3450)&&(this.model.position.z>10700 && this.model.position.z<10750) ){
                 canvas.style.opacity="0.2";
                 document.querySelector('.input').style.display='block';
                 var newForm = document.createElement("form");
@@ -252,31 +252,31 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
 
                 // Append the button to the div
                 document.getElementById('myForm').appendChild(button);
-                this.model.position.x=-5;
+                this.model.position.x-=10;
               }
             }
             
             //when moved into company building
             if(!loading){
               if(sessionStorage.getItem('companyId')){
-                if((this.model.position.x>180 && this.model.position.x<250)&&(this.model.position.z>-180 && this.model.position.z<-160) && showingDetail){
+                if((this.model.position.x>2600 && this.model.position.x<2700)&&(this.model.position.z>9650 && this.model.position.z<9700) && showingDetail){
                   // console.log("entered ", sessionStorage.getItem('companyId'));
                   const filteredList = list.filter((e) => {
                     return e.id === sessionStorage.getItem('companyId');
                   });
                   displayDetail(filteredList[0]);
                   showingDetail=false;
-                  this.model.position.z=-155;
+                  this.model.position.z+=55;
                 }
               }else if(sessionStorage.getItem('username')){
                 const length=list.length;
               // const length=4;
-                for(var i=1;i<=length;i++){
-                  if((this.model.position.x>(i*200)-20 && this.model.position.x<(i*200)+50)&&(this.model.position.z>-180 && this.model.position.z<-160) && showingDetail){
+                for(var i=0;i<length;i++){
+                  if((this.model.position.x>(i * 350)+2600 && this.model.position.x<(i * 350)+2700 )&&(this.model.position.z>9650 && this.model.position.z<9700) && showingDetail){
                     // console.log("enter comapm", list[Math.floor((i*200)/200)-1]);
-                    displayDetail(list[Math.floor((i*200)/200)-1]);
+                    displayDetail(list[Math.floor((this.model.position.x-2600)/350)]);
                     showingDetail=false;
-                    this.model.position.z=-155;
+                    this.model.position.z+=55;
                 }
               }
             }

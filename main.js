@@ -6,6 +6,10 @@ import {plane} from './floor.js'
 import {CharacterControls,loading,changeLoading, userType,updateUserType, inputing,updateInputing} from './characterControls.js'
 import { handleFormSubmission } from "./functions.js"
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import {FontLoader} from 'three/examples/jsm/loaders/FontLoader';
+import {TextGeometry} from 'three/examples/jsm/geometries/TextGeometry';
+
+
 
 
 export const canvas = document.querySelector(".webgl");
@@ -51,8 +55,8 @@ scene.add(plane);
 // CONTROLS
 var orbitControls = new OrbitControls(camera, renderer.domElement);
 // orbitControls.enableDamping = true;
-orbitControls.minDistance = 35;
-orbitControls.maxDistance = 45;
+orbitControls.minDistance = 135;
+orbitControls.maxDistance = 165;
 orbitControls.enablePan = false;
 orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
 
@@ -90,13 +94,56 @@ function LoadModel(){
   const loader=new GLTFLoader();
   const fbxLoader = new FBXLoader();
 
-  //load building
-  loader.load('src/office1.glb', (gltf)=>{
+  //load surroundings
+  loader.load('src/modern_city_block (1).glb', (gltf)=>{
     gltf.scene.traverse(c=>{
       c.castShadow=true;
     });
     gltf.scene.position.set(0, 23, 0);
     scene.add(gltf.scene);
+  },function(xhr) {
+
+    document.querySelector('span').innerHTML=(xhr.loaded / xhr.total * 100)<10?String(xhr.loaded / xhr.total * 100).slice(0,1):(xhr.loaded / xhr.total * 100)<100?String(xhr.loaded / xhr.total * 100).slice(0,2):'100';
+    if((xhr.loaded / xhr.total * 100 )==100){
+       setTimeout(show, 3000);
+          function show() {
+            document.querySelector('.loading').style.display="none";
+            canvas.style.display = "block";
+            changeLoading(false);
+          }
+
+    }
+  })
+
+  //load main building
+  loader.load('src/low_rise_wall_to_wall_office_building.glb', (gltf)=>{
+    gltf.scene.traverse(c=>{
+      c.castShadow=true;
+    });
+    gltf.scene.position.set(3300, -112, 10500);
+    gltf.scene.scale.set(.6,.6,.6)
+    scene.add(gltf.scene);
+
+
+    const fontLoader=new FontLoader();
+        fontLoader.load(
+          'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
+          (droidFont)=>{
+            const textGeometry= new TextGeometry("Rak Dao",{
+              height:2,
+              size:80,
+              font:droidFont,
+            });
+            const textMaterial=new THREE.MeshNormalMaterial();
+            const textMesh=new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.position.set(3100,80,11580);
+            // textMesh.position.x=350;
+            // textMesh.position.z=-120;
+            scene.add(textMesh);
+          }
+        )       
+
+
   },function(xhr) {
 
     document.querySelector('span').innerHTML=(xhr.loaded / xhr.total * 100)<10?String(xhr.loaded / xhr.total * 100).slice(0,1):(xhr.loaded / xhr.total * 100)<100?String(xhr.loaded / xhr.total * 100).slice(0,2):'100';
@@ -123,9 +170,9 @@ function LoadModel(){
           }
       })
 
-      model.position.set(350, 0, -120);
-      model.scale.set(0.12, 0.12, 0.12);
-      model.rotation.y = THREE.MathUtils.degToRad(-90);
+      model.position.set(3400, -112, 13600);
+      model.scale.set(0.4, 0.4, 0.4);
+      model.rotation.y = THREE.MathUtils.degToRad(-180);
 
       
 
@@ -162,10 +209,29 @@ function LoadModel(){
         {
             object.castShadow = true;
         }
-        model.position.set(-30, 0, -120);
-        model.scale.set(10, 10, 10);
-        model.rotation.y = THREE.MathUtils.degToRad(90);
+        model.position.set(3400, -112, 10620);
+        model.scale.set(30, 30, 30);
+        // model.rotation.y = THREE.MathUtils.degToRad(90);
         scene.add(model)
+
+        const fontLoader=new FontLoader();
+        fontLoader.load(
+          'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
+          (droidFont)=>{
+            const textGeometry= new TextGeometry("Register here",{
+              height:2,
+              size:30,
+              font:droidFont,
+            });
+            const textMaterial=new THREE.MeshNormalMaterial();
+            const textMesh=new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.position.set(3300,10,10620);
+            // textMesh.position.x=350;
+            // textMesh.position.z=-120;
+            scene.add(textMesh);
+          }
+        )       
+
     })
 
     var repGltfanimations = gltf.animations // getting all gltf animation clips from gltf model
@@ -244,5 +310,6 @@ function RAF(){
 
 // // Helper to show axes
 const axesHelper = new THREE.AxesHelper(5);
+axesHelper.position.set(3400, -112, 13800);
 scene.add(axesHelper);
 

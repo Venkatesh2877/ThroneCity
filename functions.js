@@ -19,16 +19,16 @@ function loadLobby(body){
     const loader = new GLTFLoader();
     console.log(body);
     // Load the 3D model
-    loader.load("./src/mersus_office.glb",  (gltf)=> {
+    loader.load("./src/office_cabin.glb",  (gltf)=> {
           gltf.scene.traverse(c=>{  
             c.castShadow=true;
           });
 
       if(body.companyId){
         const company= list.find((each)=>each.id==body.companyId);
-        gltf.scene.position.set(200, 0, -240);
-        gltf.scene.scale.set(10,10,10);
-        gltf.scene.rotation.y= THREE.MathUtils.degToRad(-80);
+        gltf.scene.position.set(2700, -112, 9040);
+        gltf.scene.scale.set(30,40,40);
+        gltf.scene.rotation.y= THREE.MathUtils.degToRad(180);
         scene.add(gltf.scene);
         
 
@@ -38,12 +38,12 @@ function loadLobby(body){
           (droidFont)=>{
             const textGeometry= new TextGeometry(company.companyName,{
               height:2,
-              size:5,
+              size:30,
               font:droidFont,
             });
             const textMaterial=new THREE.MeshNormalMaterial();
             const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-            textMesh.position.set(200,35,-180);
+            textMesh.position.set(2500,55,9900);
             // textMesh.position.x=350;
             // textMesh.position.z=-120;
             scene.add(textMesh);
@@ -52,32 +52,32 @@ function loadLobby(body){
 
       }else if(body.userName){
         //  Create multiple instances of the model
-        for (let i = 1  ; i <= list.length; i++) {        
+        for (let i = 0  ; i < list.length; i++) {        
             const clonedModel = gltf.scene.clone();
-            clonedModel.position.set(i * 200, 0, -240);
-            clonedModel.scale.set(10, 10, 10);
-            clonedModel.rotation.y = THREE.MathUtils.degToRad(-80);
+            clonedModel.position.set((i * 350)+2700, -112, 9040);
+            clonedModel.scale.set(30, 40, 40);
+            clonedModel.rotation.y = THREE.MathUtils.degToRad(180);
             scene.add(clonedModel);
             const fontLoader=new FontLoader();
             fontLoader.load(
               'node_modules/three/examples/fonts/droid/droid_sans_mono_regular.typeface.json',
               (droidFont)=>{
-                const textGeometry= new TextGeometry(list[i-1].companyName,{
+                const textGeometry= new TextGeometry(list[i].companyName,{
                   height:2,
-                  size:5,
+                  size:30,
                   font:droidFont,
                 });
                 const textMaterial=new THREE.MeshNormalMaterial();
                 const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-                textMesh.position.set((i*200),35,-180);
+                textMesh.position.set((i*350)+2500,55,9900);
                 scene.add(textMesh);
               }
             ) 
         }
       } else if(body.task){
-        gltf.scene.position.set(200*list.length, 0, -240);
-        gltf.scene.scale.set(10,10,10);
-        gltf.scene.rotation.y= THREE.MathUtils.degToRad(-80);
+        gltf.scene.position.set((350*(list.length-1))+2700, -112, 9040);
+        gltf.scene.scale.set(30,40,40);
+        gltf.scene.rotation.y= THREE.MathUtils.degToRad(180);
         scene.add(gltf.scene);
         
 
@@ -87,12 +87,12 @@ function loadLobby(body){
           (droidFont)=>{
             const textGeometry= new TextGeometry(list[list.length-1].companyName,{
               height:2,
-              size:5,
+              size:30,
               font:droidFont,
             });
             const textMaterial=new THREE.MeshNormalMaterial();
             const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-            textMesh.position.set(200*list.length,35,-180);
+            textMesh.position.set((350*(list.length-1))+2500,55,9900);
             // textMesh.position.x=350;
             // textMesh.position.z=-120;
             scene.add(textMesh);
@@ -113,6 +113,7 @@ function handleFormSubmission(event) {
       loadLobby({companyId:event.target.Company.value});
       console.log("company");
       sessionStorage.setItem("companyId", event.target.Company.value);
+      sessionStorage.removeItem('username');
 
     }else if(event.target.elements.confirmPassword){
       //loadLobby({userName:event.target.username, password:event.target.password, confirmPassword:event.target.confirmPassword});
@@ -133,6 +134,7 @@ function handleFormSubmission(event) {
       loadLobby({userName:event.target.username.value, password:event.target.password.value});
       console.log("old user");
       sessionStorage.setItem("username", event.target.username.value);
+      sessionStorage.removeItem('companyId');
     }
 }
 

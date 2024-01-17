@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { camera, light, amblight } from "./cameraSceneLight.js";
-import {plane} from './floor.js'
+import {floorPlane,roofPlane } from './floor.js'
 import {CharacterControls,loading,changeLoading, userType,updateUserType, inputing,updateInputing} from './characterControls.js'
 import { handleFormSubmission } from "./functions.js"
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
@@ -48,8 +48,9 @@ const texture= loader.load([
 ]);
 scene.background= texture;
 
-//floor Load using image texture
-scene.add(plane);
+//floor and roof Load using image texture
+scene.add(floorPlane);
+scene.add(roofPlane);
 
 
 // CONTROLS

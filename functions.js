@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import {TextGeometry} from 'three/examples/jsm/geometries/TextGeometry';
 import {TTFLoader} from 'three/examples/jsm/loaders/TTFLoader';
 import {FontLoader} from 'three/examples/jsm/loaders/FontLoader';
-
+import { updateShowingDetail } from "./characterControls";
 
 
 var formData = new FormData();
@@ -142,6 +142,7 @@ const handleCancel=()=>{
   console.log("clicked")
   canvas.style.opacity=1;
   companyListElement.innerHTML="";
+  updateShowingDetail();
 }
 
 
@@ -157,9 +158,9 @@ function displayDetail(list){
     <h2>Legal Status: ${list.legalStatus}</h2>
     <h2>Share Holder Name: ${list.shareHolderName}</h2>
     <h2>Role In Company: ${list.roleInCompany}</h2>
-    <div><a href="${list.passport}" target="_blank">Passport</a></div>
-    <div><a href="${list.emirateID}" target="_blank">Emirate ID</a></div>
-    <div><a href="${list.bankStatement}" target="_blank">Bank Statement</a></div>
+    <div class="docLink"><a href="${list.passport}" target="_blank">Passport</a></div>
+    <div class="docLink"><a href="${list.emirateID}" target="_blank">Emirate ID</a></div>
+    <div class="docLink"><a href="${list.bankStatement}" target="_blank">Bank Statement</a></div>
   `;
   
    // Create a button element

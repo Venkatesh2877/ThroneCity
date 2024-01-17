@@ -3,8 +3,9 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { camera, light, amblight } from "./cameraSceneLight.js";
 import {plane} from './floor.js'
-import {CharacterControls,loading,changeLoading, userType,updateUserType, inputing,updateInputing,updateRegisterInputing} from './characterControls.js'
-import { handleFormSubmission } from "./functions.js";
+import {CharacterControls,loading,changeLoading, userType,updateUserType, inputing,updateInputing} from './characterControls.js'
+import { handleFormSubmission } from "./functions.js"
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 
 
 export const canvas = document.querySelector(".webgl");
@@ -141,35 +142,50 @@ function LoadModel(){
 
 
   // //another user model
-  // {charLoader.load("./src/human/scene.gltf", (gltf)=> {
-  //   const model = gltf.scene
-  //   model.traverse( (object)=>{
-  //       if(object.isMesh)
-  //       {
-  //           object.castShadow = true;
-  //       }
-  //       model.position.set(300, 0, -120);
-  //       model.scale.set(.12, .12, .12);
-  //       // model.rotation.y = THREE.MathUtils.degToRad(80);
-
-  //       scene.add(model)
-  //   })
-
-  //   var humanGltfanimations = gltf.animations // getting all gltf animation clips from gltf model
-  //   var humanMixer = new THREE.AnimationMixer(model) // will convert all animation clips into animation actions using mixer which helps into fading in or fading out animations for smooth animations transition
-  //   var humanAnimationClip = humanGltfanimations[0];
-  //   console.log(humanAnimationClip);
-  //   // Create an animation action
-  //   var humanAnimationAction = humanMixer.clipAction(humanAnimationClip);
-    
-  //   // Play the animation
-  //   humanAnimationAction.play();
-  //   humanMixer.update(clock.getDelta())
-
+  // const fbxLoader = new FBXLoader();
+  // fbxLoader.load("./src/character.fbx", (fbx) => {
+  //   // fbx.scene.traverse(c=>{
+  //   //   c.castShadow=true;
   //   // });
-  // // }
-  // })}
+  //   // fbx.scene.position.set(300, 0, 120);
+  //   // scene.add(fbx.scene);
+  //   const model = fbx;
+  //     model.traverse( (object)=>{
+  //         if(object.isMesh)
+  //         {
+  //             object.castShadow = true;
+  //         }
+  //         model.position.set(350, 0, -120);
+  //         model.scale.set(0.12, 0.12, 0.12);
+  //         model.rotation.y = THREE.MathUtils.degToRad(-80);
 
+  //         scene.add(model)
+  //     })
+      
+  //     var animations=[];
+  //     const idle = useFBX("./src/Breathing Idle.fbx");
+
+  //     animations["idle"] = {
+  //       clip: mixer.clipAction(idle.animations[0]),
+  //     };
+    
+  //     const walk = useFBX("./src/Walking.fbx");
+    
+  //     animations["walk"] = {
+  //       clip: mixer.clipAction(walk.animations[0]),
+  //     };
+    
+  //   //   var mixer= new THREE.AnimationMixer(model);
+  //   //   const animationAction = mixer.clipAction(
+  //   //     fbx.animations[1]
+  //   // );
+  //   // console.log(animationAction);
+  //   // mixer.addAction(animationAction);
+  //   // animationAction.play();
+  //     // idleModel.visible = !isWalking; // Initially show idle model
+  // });
+
+ 
 
 
   //load reception model

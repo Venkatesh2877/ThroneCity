@@ -10,7 +10,7 @@ const changeLoading=(value)=>{
     loading=value;
 }
 
-var userType=null, inputing=false, registerinputing=true;
+var userType=null, inputing=false, showingDetail=true;
 
 const updateUserType=(value)=>{
     userType=value;
@@ -20,8 +20,15 @@ const updateInputing=(value)=>{
     inputing=value;
 }
 
-const updateRegisterInputing=(value)=>{
-    registerinputing=value;
+
+const updateShowingDetail=()=>{
+  showingDetail=!showingDetail;
+}
+
+
+const handleCancel=()=>{
+  canvas.style.opacity=1;
+  document.querySelector('.input').style.display='none';
 }
 var CharacterControls = /** @class */( function () { // ES6 standard way of creating a class in javascript where the function followed by /** @class */ will be treated as a class and the function next to it will be a constructor function
 
@@ -123,8 +130,6 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
               right=true;
             }else if(keysPressed['a']){
               
-              // this.model.position.x-=moveX/2;
-              // this.model.position.z+=moveZ;
               if(left){
 
                 if(faceXNeg){
@@ -151,12 +156,9 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
                 this.camera.position.x = this.model.position.x + offsetX;
                 this.camera.position.z = this.model.position.z + offsetZ;
                 this.camera.position.y = this.model.position.y + 2;
-                console.log(this.model.rotation)
                 left=false;
               }
             }else if(keysPressed['d']){
-              // this.model.position.x-=moveX/2;
-              // this.model.position.z-=moveZ;
               
               if(right){
 
@@ -184,7 +186,6 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
               this.camera.position.x = this.model.position.x + offsetX;
               this.camera.position.z = this.model.position.z + offsetZ;
               this.camera.position.y = this.model.position.y + 2;
-              console.log(this.model.rotation);
               right=false;
               }
             }
@@ -233,8 +234,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
   
             //move to receiption page
             if(!loading ){
-              if((this.model.position.x>-30 && this.model.position.x<-10)&&(this.model.position.z>-130 && this.model.position.z<-105) && registerinputing){
-                registerinputing=false;
+              if((this.model.position.x>-30 && this.model.position.x<-10)&&(this.model.position.z>-130 && this.model.position.z<-105) ){
                 canvas.style.opacity="0.2";
                 document.querySelector('.input').style.display='block';
                 var newForm = document.createElement("form");
@@ -243,28 +243,40 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
                 // Add new content to the form
                 newForm.innerHTML = registerCompanyFormHTML;
                 document.querySelector('.input').replaceChildren(newForm);
+                
+                  // Create a button element
+                var button = document.createElement("div");
+                button.innerHTML = "Cancel";
+
+                button.onclick = handleCancel;
+
+                // Append the button to the div
+                document.getElementById('myForm').appendChild(button);
+                this.model.position.x=-5;
               }
             }
             
             //when moved into company building
             if(!loading){
               if(sessionStorage.getItem('companyId')){
-                if((this.model.position.x>180 && this.model.position.x<250)&&(this.model.position.z>-180 && this.model.position.z<-160)){
+                if((this.model.position.x>180 && this.model.position.x<250)&&(this.model.position.z>-180 && this.model.position.z<-160) && showingDetail){
                   // console.log("entered ", sessionStorage.getItem('companyId'));
                   const filteredList = list.filter((e) => {
                     return e.id === sessionStorage.getItem('companyId');
                   });
                   displayDetail(filteredList[0]);
-                  // this.model.position.x=175;
+                  showingDetail=false;
+                  this.model.position.z=-155;
                 }
               }else if(sessionStorage.getItem('username')){
                 const length=list.length;
               // const length=4;
                 for(var i=1;i<=length;i++){
-                  if((this.model.position.x>(i*200)-20 && this.model.position.x<(i*200)+50)&&(this.model.position.z>-180 && this.model.position.z<-160)){
+                  if((this.model.position.x>(i*200)-20 && this.model.position.x<(i*200)+50)&&(this.model.position.z>-180 && this.model.position.z<-160) && showingDetail){
                     // console.log("enter comapm", list[Math.floor((i*200)/200)-1]);
                     displayDetail(list[Math.floor((i*200)/200)-1]);
-                    // this.model.position.x=175;
+                    showingDetail=false;
+                    this.model.position.z=-155;
                 }
               }
             }
@@ -276,4 +288,4 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
   })();
 
 
-  export {CharacterControls,loading,changeLoading, userType,updateUserType, inputing,updateInputing,updateRegisterInputing};
+  export {CharacterControls,loading,changeLoading, userType,updateUserType, inputing,updateInputing, updateShowingDetail};

@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import {newUserFormHTML, clientUserFormHTML, registerCompanyFormHTML} from './inputForm.js';
-import { canvas } from "./main.js";
+import { canvas,scene } from "./main.js";
 import { list,displayDetail} from "./functions.js";
 
 const DIRECTIONS = ['w', 'a', 's', 'd'];
@@ -102,7 +102,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
              // move model
             const moveX =  velocity * delta
             const moveZ = velocity * delta
-            console.log(this.model.position.x, this.model.position.z);
+            // console.log(this.model.position.x, this.model.position.z);
             if(keysPressed['w']){
               
               if(faceXNeg){
@@ -221,6 +221,18 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
   
   
               }else if(userType=='Client' && inputing){
+                var reception = scene.getObjectByName("reception");
+                // var receptionText = scene.getObjectByName("receptionText");
+                scene.remove(reception);
+                const receptionObjects = scene.children.filter((obj) => obj.name === "receptionText");
+
+                // Remove each object from the scene
+                receptionObjects.forEach((obj) => {
+                    scene.remove(obj);
+                });
+                // scene.remove(receptionText);
+                console.log(scene);
+                // console.log(selectedObject);
                 inputing=false;
                 document.querySelector('.input').style.display='block';
                 var newForm = document.createElement("form");
@@ -233,8 +245,8 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
             }
   
             //move to reception page
-            if(!loading ){
-              if((this.model.position.x>3350 && this.model.position.x<3450)&&(this.model.position.z>10700 && this.model.position.z<10750) ){
+            if(!loading && !sessionStorage.getItem('companyId') ){
+              if((this.model.position.x>4100 && this.model.position.x<4150)&&(this.model.position.z>10600 && this.model.position.z<10700) ){
                 canvas.style.opacity="0.2";
                 document.querySelector('.input').style.display='block';
                 var newForm = document.createElement("form");

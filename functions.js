@@ -26,29 +26,31 @@ function loadLobby(body){
 
       if(body.companyId){
         const company= list.find((each)=>each.id==body.companyId);
-        gltf.scene.position.set(2700, -112, 9040);
-        gltf.scene.scale.set(30,40,40);
-        gltf.scene.rotation.y= THREE.MathUtils.degToRad(180);
-        scene.add(gltf.scene);
-        
+        if(company){
+          gltf.scene.position.set(2700, -112, 9040);
+          gltf.scene.scale.set(30,40,40);
+          gltf.scene.rotation.y= THREE.MathUtils.degToRad(180);
+          scene.add(gltf.scene);
 
-        const fontLoader=new FontLoader();
-        fontLoader.load(
-          'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
-          (droidFont)=>{
-            const textGeometry= new TextGeometry(company.companyName,{
-              height:2,
-              size:30,
-              font:droidFont,
-            });
-            const textMaterial=new THREE.MeshNormalMaterial();
-            const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-            textMesh.position.set(2500,55,9900);
-            // textMesh.position.x=350;
-            // textMesh.position.z=-120;
-            scene.add(textMesh);
-          }
-        )       
+          const fontLoader=new FontLoader();
+          fontLoader.load(
+            'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
+            (droidFont)=>{
+              const textGeometry= new TextGeometry(company.companyName,{
+                height:2,
+                size:30,
+                font:droidFont,
+              });
+              const textMaterial=new THREE.MeshNormalMaterial();
+              const textMesh=new THREE.Mesh(textGeometry, textMaterial);
+              textMesh.position.set(2500,55,9900);
+              // textMesh.position.x=350;
+              // textMesh.position.z=-120;
+              scene.add(textMesh);
+            }
+          )
+        }
+               
 
       }else if(body.userName){
         //  Create multiple instances of the model
@@ -117,7 +119,10 @@ function handleFormSubmission(event) {
 
     }else if(event.target.elements.confirmPassword){
       //loadLobby({userName:event.target.username, password:event.target.password, confirmPassword:event.target.confirmPassword});
-      console.log("new user");
+      console.log("new user",list);
+      sessionStorage.removeItem('username');
+      sessionStorage.removeItem('companyId');
+      list=[];
       
     }else if(event.target.elements.companyName){
       console.log("register company");

@@ -202,7 +202,6 @@ function LoadModel(){
 
 
   //load reception model
-
   loader.load("./src/reception.glb", (gltf)=> {
     const model = gltf.scene
     model.traverse( (object)=>{
@@ -210,9 +209,10 @@ function LoadModel(){
         {
             object.castShadow = true;
         }
-        model.position.set(3400, -112, 10620);
+        model.position.set(4200, -112, 10620);
         model.scale.set(30, 30, 30);
-        // model.rotation.y = THREE.MathUtils.degToRad(90);
+        model.rotation.y = THREE.MathUtils.degToRad(-90);
+        model.name="reception";
         scene.add(model)
 
         const fontLoader=new FontLoader();
@@ -221,12 +221,14 @@ function LoadModel(){
           (droidFont)=>{
             const textGeometry= new TextGeometry("Register here",{
               height:2,
-              size:30,
+              size:15,
               font:droidFont,
             });
             const textMaterial=new THREE.MeshNormalMaterial();
             const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-            textMesh.position.set(3300,10,10620);
+            textMesh.position.set(4200,-40,10560);
+            textMesh.rotation.y = THREE.MathUtils.degToRad(-90);
+            textMesh.name="receptionText";
             // textMesh.position.x=350;
             // textMesh.position.z=-120;
             scene.add(textMesh);

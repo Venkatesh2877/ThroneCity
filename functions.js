@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import {TextGeometry} from 'three/examples/jsm/geometries/TextGeometry';
 import {TTFLoader} from 'three/examples/jsm/loaders/TTFLoader';
 import {FontLoader} from 'three/examples/jsm/loaders/FontLoader';
-import { updateShowingDetail } from "./characterControls";
+import { updateShowingDetail,updateMovement } from "./characterControls";
 
 
 var formData = new FormData();
@@ -110,6 +110,7 @@ function handleFormSubmission(event) {
     event.preventDefault(); // Prevent the default form submission
     canvas.style.opacity = "1";
     document.querySelector('.input').style.display = "none";
+    updateMovement(true);
 
     if(event.target.elements.Company){
       loadLobby({companyId:event.target.Company.value});
@@ -150,6 +151,7 @@ const handleCancel=()=>{
   canvas.style.opacity=1;
   companyListElement.innerHTML="";
   updateShowingDetail();
+  updateMovement(true);
 }
 
 

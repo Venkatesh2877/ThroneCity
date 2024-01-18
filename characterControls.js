@@ -10,7 +10,7 @@ const changeLoading=(value)=>{
     loading=value;
 }
 
-var userType=null, inputing=false, showingDetail=true;
+var userType=null, inputing=false, showingDetail=true, moveCharacter=false;
 
 const updateUserType=(value)=>{
     userType=value;
@@ -23,6 +23,10 @@ const updateInputing=(value)=>{
 
 const updateShowingDetail=()=>{
   showingDetail=!showingDetail;
+}
+
+const updateMovement=(value)=>{
+  moveCharacter=value;
 }
 
 
@@ -70,7 +74,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
           // TO DETERMINE WHETHER NEXT STATE MUST BE IDLE,WALK,RUN
           var play = ''
          
-           if( directionPressed )
+           if( directionPressed && moveCharacter)
           {
             play = 'Walk'
           }
@@ -103,51 +107,83 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
             const moveX =  velocity * delta
             const moveZ = velocity * delta
             // console.log(this.model.position.x, this.model.position.z);
-            if(keysPressed['w']){
+            console.log(moveCharacter);
+            if(moveCharacter){
+              if(keysPressed['w']){
               
-              if(faceXNeg){
-                this.model.position.z-=moveZ;
-              }else if(faceXPos){
-                this.model.position.z+=moveZ;
-              }else if(faceZNeg){
-                this.model.position.x+=moveX;
-              }else{
-                this.model.position.x-=moveX;
-              }
-              left=true;
-              right=true;
-            }else if(keysPressed['s']){
-              if(faceXNeg){
-                this.model.position.z+=moveZ;
-              }else if(faceXPos){
-                this.model.position.z-=moveZ;
-              }else if(faceZNeg){
-                this.model.position.x-=moveX;
-              }else{
-                this.model.position.x+=moveX;
-              }
-              left=true;
-              right=true;
-            }else if(keysPressed['a']){
-              
-              if(left){
-
                 if(faceXNeg){
-                  faceXNeg=false;
-                  faceZPos=true;
-                }else if(faceZPos){
-                  faceZPos=false;
-                  faceXPos=true;
+                  this.model.position.z-=moveZ;
                 }else if(faceXPos){
-                  faceXPos=false;
-                  faceZNeg=true;
+                  this.model.position.z+=moveZ;
+                }else if(faceZNeg){
+                  this.model.position.x+=moveX;
                 }else{
-                  faceZNeg=false;
-                  faceXNeg=true;
+                  this.model.position.x-=moveX;
                 }
-
-
-                this.model.rotateY(+Math.PI / 2);
+                left=true;
+                right=true;
+              }else if(keysPressed['s']){
+                if(faceXNeg){
+                  this.model.position.z+=moveZ;
+                }else if(faceXPos){
+                  this.model.position.z-=moveZ;
+                }else if(faceZNeg){
+                  this.model.position.x-=moveX;
+                }else{
+                  this.model.position.x+=moveX;
+                }
+                left=true;
+                right=true;
+              }else if(keysPressed['a']){
+                
+                if(left){
+  
+                  if(faceXNeg){
+                    faceXNeg=false;
+                    faceZPos=true;
+                  }else if(faceZPos){
+                    faceZPos=false;
+                    faceXPos=true;
+                  }else if(faceXPos){
+                    faceXPos=false;
+                    faceZNeg=true;
+                  }else{
+                    faceZNeg=false;
+                    faceXNeg=true;
+                  }
+  
+  
+                  this.model.rotateY(+Math.PI / 2);
+                  const distance = 10; // Adjust the distance from the model
+                  const angle = this.model.rotation.y;
+                  const offsetX = Math.sin(angle) * distance;
+                  const offsetZ = Math.cos(angle) * distance;
+      
+                  this.camera.position.x = this.model.position.x + offsetX;
+                  this.camera.position.z = this.model.position.z + offsetZ;
+                  this.camera.position.y = this.model.position.y + 2;
+                  left=false;
+                }
+              }else if(keysPressed['d']){
+                
+                if(right){
+  
+                  if(faceXNeg){
+                    faceXNeg=false;
+                    faceZNeg=true;
+                  }else if(faceZNeg){
+                    faceZNeg=false;
+                    faceXPos=true;
+                  }else if(faceXPos){
+                    faceXPos=false;
+                    faceZPos=true;
+                  }else{
+                    faceZPos=false;
+                    faceXNeg=true;
+                  }
+  
+  
+                this.model.rotateY(-Math.PI / 2);
                 const distance = 10; // Adjust the distance from the model
                 const angle = this.model.rotation.y;
                 const offsetX = Math.sin(angle) * distance;
@@ -156,39 +192,11 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
                 this.camera.position.x = this.model.position.x + offsetX;
                 this.camera.position.z = this.model.position.z + offsetZ;
                 this.camera.position.y = this.model.position.y + 2;
-                left=false;
-              }
-            }else if(keysPressed['d']){
-              
-              if(right){
-
-                if(faceXNeg){
-                  faceXNeg=false;
-                  faceZNeg=true;
-                }else if(faceZNeg){
-                  faceZNeg=false;
-                  faceXPos=true;
-                }else if(faceXPos){
-                  faceXPos=false;
-                  faceZPos=true;
-                }else{
-                  faceZPos=false;
-                  faceXNeg=true;
+                right=false;
                 }
-
-
-              this.model.rotateY(-Math.PI / 2);
-              const distance = 10; // Adjust the distance from the model
-              const angle = this.model.rotation.y;
-              const offsetX = Math.sin(angle) * distance;
-              const offsetZ = Math.cos(angle) * distance;
-  
-              this.camera.position.x = this.model.position.x + offsetX;
-              this.camera.position.z = this.model.position.z + offsetZ;
-              this.camera.position.y = this.model.position.y + 2;
-              right=false;
               }
             }
+            
   
             
             this.cameraTarget.x = this.model.position.x;
@@ -247,6 +255,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
             //move to reception page
             if(!loading && !sessionStorage.getItem('companyId') ){
               if((this.model.position.x>4100 && this.model.position.x<4150)&&(this.model.position.z>10600 && this.model.position.z<10700) ){
+                updateMovement(false);
                 canvas.style.opacity="0.2";
                 document.querySelector('.input').style.display='block';
                 var newForm = document.createElement("form");
@@ -272,6 +281,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
             if(!loading){
               if(sessionStorage.getItem('companyId')){
                 if((this.model.position.x>2600 && this.model.position.x<2700)&&(this.model.position.z>9650 && this.model.position.z<9700) && showingDetail){
+                  updateMovement(false);
                   // console.log("entered ", sessionStorage.getItem('companyId'));
                   const filteredList = list.filter((e) => {
                     return e.id === sessionStorage.getItem('companyId');
@@ -285,6 +295,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
               // const length=4;
                 for(var i=0;i<length;i++){
                   if((this.model.position.x>(i * 350)+2600 && this.model.position.x<(i * 350)+2700 )&&(this.model.position.z>9650 && this.model.position.z<9700) && showingDetail){
+                    updateMovement(false);
                     // console.log("enter comapm", list[Math.floor((i*200)/200)-1]);
                     displayDetail(list[Math.floor((this.model.position.x-2600)/350)]);
                     showingDetail=false;
@@ -300,4 +311,4 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
   })();
 
 
-  export {CharacterControls,loading,changeLoading, userType,updateUserType, inputing,updateInputing, updateShowingDetail};
+  export {CharacterControls,loading,changeLoading, userType,updateUserType, inputing,updateInputing, updateShowingDetail,updateMovement};

@@ -59,7 +59,7 @@ var orbitControls = new OrbitControls(camera, renderer.domElement);
 orbitControls.minDistance = 135;
 orbitControls.maxDistance = 165;
 orbitControls.enablePan = false;
-orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
+orbitControls.maxPolarAngle = Math.PI / 3 + 0.20;
 
 
 
@@ -142,15 +142,15 @@ function LoadModel(){
           }
         ) 
         
-            // Image
-        const textureLoader = new THREE.TextureLoader();
-        const imageTexture = textureLoader.load('./src/res/rakdao_jpeg.jpeg'); // Set the path to your image
-        const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
-        const imageGeometry = new THREE.PlaneGeometry(100, 100); // Adjust the size as needed
-        const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
-        imageMesh.position.set(3080, 130, 11500); // Adjust the position as needed
+          // Image
+      const textureLoader = new THREE.TextureLoader();
+      const imageTexture = textureLoader.load('./src/res/rakdao_jpeg.jpeg'); // Set the path to your image
+      const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
+      const imageGeometry = new THREE.PlaneGeometry(100, 100); // Adjust the size as needed
+      const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
+      imageMesh.position.set(3080, 130, 11500); // Adjust the position as needed
 
-        scene.add(imageMesh)
+      scene.add(imageMesh)
 
 
   },function(xhr) {

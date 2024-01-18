@@ -48,7 +48,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
   
         // CONSTANT DATA
         this.fadeDuration = 0.2
-        this.walkVelocity = 500
+        this.walkVelocity = 250
         this.currentAction=currentAction
         this.model = model
         this.mixer = mixer

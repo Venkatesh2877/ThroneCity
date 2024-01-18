@@ -8,10 +8,18 @@ import { updateShowingDetail,updateMovement } from "./characterControls";
 
 
 var formData = new FormData();
-export var list=[{companyName:"Company1", id:"company0001", bankName:"Bank of America",legalStatus:"Legal",shareHolderName:"Venkatesh", roleInCompany:"Associate", passport:"./src/assets/dummy.pdf", emirateID:"./src/assets/dummy.pdf", bankStatement:"./src/assets/dummy.pdf"},
-{companyName:"Company2", id:"company0002", bankName:"SBI",legalStatus:"Illegal",shareHolderName:"Karthick", roleInCompany:"Associate", passport:"./src/assets/dummy.pdf", emirateID:"./src/assets/dummy.pdf", bankStatement:"./src/assets/dummy.pdf"},
-{companyName:"Company3", id:"company0003", bankName:"Bank of Baroda",legalStatus:"Illegal",shareHolderName:"Ali", roleInCompany:"Manager", passport:"./src/assets/dummy.pdf", emirateID:"./src/assets/dummy.pdf", bankStatement:"./src/assets/dummy.pdf"},
-{companyName:"Company4", id:"company0004", bankName:"Canada Bank",legalStatus:"Legal",shareHolderName:"Vishnu", roleInCompany:"CTO", passport:"./src/assets/dummy.pdf", emirateID:"./src/assets/dummy.pdf", bankStatement:"./src/assets/dummy.pdf"}]
+export var list=[{companyName:"SimplyFi", id:"company0001", bankName:"Bank of America",legalStatus:"Legal",shareHolderName:"Venkatesh", roleInCompany:"Associate", CertificateOfRegistration:"./src/assets/Certificate of registration.pdf", 
+ESTABLISHMENTCARDMempac:"./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf", MempacLicenseCertificate:"./src/assets/Mempac License Certificate 2020.pdf", SHARECERTIFICATE:"./src/assets/SHARE CERTIFICATE.pdf",MempacELicenseCertificate:"./src/assets/Mempac -E-License certificate0.pdf",MOA:"/src/assets/MOA.pdf"},
+
+{companyName:"Google", id:"company0002", bankName:"SBI",legalStatus:"Illegal",shareHolderName:"Karthick", roleInCompany:"Associate", CertificateOfRegistration:"./src/assets/Certificate of registration.pdf", 
+ESTABLISHMENTCARDMempac:"./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf", MempacLicenseCertificate:"./src/assets/Mempac License Certificate 2020.pdf", SHARECERTIFICATE:"./src/assets/SHARE CERTIFICATE.pdf",MempacELicenseCertificate:"./src/assets/Mempac -E-License certificate0.pdf",MOA:"/src/assets/MOA.pdf"},
+
+
+{companyName:"ITC", id:"company0003", bankName:"Bank of Baroda",legalStatus:"Illegal",shareHolderName:"Ali", roleInCompany:"Manager", CertificateOfRegistration:"./src/assets/Certificate of registration.pdf", 
+ESTABLISHMENTCARDMempac:"./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf", MempacLicenseCertificate:"./src/assets/Mempac License Certificate 2020.pdf", SHARECERTIFICATE:"./src/assets/SHARE CERTIFICATE.pdf",MempacELicenseCertificate:"./src/assets/Mempac -E-License certificate0.pdf",MOA:"/src/assets/MOA.pdf"},
+
+{companyName:"Honda", id:"company0004", bankName:"Canada Bank",legalStatus:"Legal",shareHolderName:"Vishnu", roleInCompany:"CTO", CertificateOfRegistration:"./src/assets/Certificate of registration.pdf", 
+ESTABLISHMENTCARDMempac:"./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf", MempacLicenseCertificate:"./src/assets/Mempac License Certificate 2020.pdf", SHARECERTIFICATE:"./src/assets/SHARE CERTIFICATE.pdf",MempacELicenseCertificate:"./src/assets/Mempac -E-License certificate0.pdf",MOA:"/src/assets/MOA.pdf"}]
 
 
 
@@ -166,9 +174,13 @@ function displayDetail(list){
     <h2>Legal Status: ${list.legalStatus}</h2>
     <h2>Share Holder Name: ${list.shareHolderName}</h2>
     <h2>Role In Company: ${list.roleInCompany}</h2>
-    <div class="docLink"><a href="${list.passport}" target="_blank">Passport</a></div>
-    <div class="docLink"><a href="${list.emirateID}" target="_blank">Emirate ID</a></div>
-    <div class="docLink"><a href="${list.bankStatement}" target="_blank">Bank Statement</a></div>
+    <div class="docLink"><a href="${list.CertificateOfRegistration}" target="_blank">Certificate Of Registration</a></div>
+    <div class="docLink"><a href="${list.ESTABLISHMENTCARDMempac}" target="_blank">ESTABLISHMENT CARD Mempac</a></div>
+    <div class="docLink"><a href="${list.MempacLicenseCertificate}" target="_blank">Mempac License Certificate</a></div>
+    <div class="docLink"><a href="${list.SHARECERTIFICATE}" target="_blank">SHARE CERTIFICATE</a></div>
+    <div class="docLink"><a href="${list.MempacELicenseCertificate}" target="_blank">Mempac-E-License Certificate</a></div>
+    <div class="docLink"><a href="${list.MOA}" target="_blank">MOA</a></div>
+    
   `;
   
    // Create a button element

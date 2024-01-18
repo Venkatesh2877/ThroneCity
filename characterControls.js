@@ -107,7 +107,6 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
             const moveX =  velocity * delta
             const moveZ = velocity * delta
             // console.log(this.model.position.x, this.model.position.z);
-            console.log(moveCharacter);
             if(moveCharacter){
               if(keysPressed['w']){
               
@@ -290,7 +289,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
                   showingDetail=false;
                   this.model.position.z+=55;
                 }
-              }else if(sessionStorage.getItem('username')){
+              }else{
                 const length=list.length;
               // const length=4;
                 for(var i=0;i<length;i++){

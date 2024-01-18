@@ -120,7 +120,6 @@ function handleFormSubmission(event) {
 
     }else if(event.target.elements.confirmPassword){
       //loadLobby({userName:event.target.username, password:event.target.password, confirmPassword:event.target.confirmPassword});
-      console.log("new user",list);
       sessionStorage.removeItem('username');
       sessionStorage.removeItem('companyId');
       list=[];

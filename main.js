@@ -125,7 +125,7 @@ function LoadModel(){
     gltf.scene.scale.set(.6,.6,.6)
     scene.add(gltf.scene);
 
-
+    //add font
     const fontLoader=new FontLoader();
         fontLoader.load(
           'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
@@ -135,14 +135,22 @@ function LoadModel(){
               size:80,
               font:droidFont,
             });
-            const textMaterial=new THREE.MeshNormalMaterial();
+            const textMaterial=new THREE.MeshBasicMaterial({color: 0x00cccc });
             const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-            textMesh.position.set(3100,80,11580);
-            // textMesh.position.x=350;
-            // textMesh.position.z=-120;
+            textMesh.position.set(3150,80,11580);
             scene.add(textMesh);
           }
-        )       
+        ) 
+        
+            // Image
+        const textureLoader = new THREE.TextureLoader();
+        const imageTexture = textureLoader.load('./src/res/rakdao_jpeg.jpeg'); // Set the path to your image
+        const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
+        const imageGeometry = new THREE.PlaneGeometry(100, 100); // Adjust the size as needed
+        const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
+        imageMesh.position.set(3080, 130, 11500); // Adjust the position as needed
+
+        scene.add(imageMesh)
 
 
   },function(xhr) {

@@ -31,6 +31,7 @@ const updateMovement=(value)=>{
 
 
 const handleCancel=()=>{
+  updateMovement(true);
   canvas.style.opacity=1;
   document.querySelector('.input').style.display='none';
 }
@@ -158,9 +159,9 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
                   const offsetX = Math.sin(angle) * distance;
                   const offsetZ = Math.cos(angle) * distance;
       
-                  this.camera.position.x = this.model.position.x + offsetX;
-                  this.camera.position.z = this.model.position.z + offsetZ;
-                  this.camera.position.y = this.model.position.y + 2;
+                  // this.camera.position.x = this.model.position.x + offsetX;
+                  // this.camera.position.z = this.model.position.z + offsetZ;
+                  // this.camera.position.y = this.model.position.y + 2;
                   left=false;
                 }
               }else if(keysPressed['d']){
@@ -188,9 +189,9 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
                 const offsetX = Math.sin(angle) * distance;
                 const offsetZ = Math.cos(angle) * distance;
     
-                this.camera.position.x = this.model.position.x + offsetX;
-                this.camera.position.z = this.model.position.z + offsetZ;
-                this.camera.position.y = this.model.position.y + 2;
+                // this.camera.position.x = this.model.position.x + offsetX;
+                // this.camera.position.z = this.model.position.z + offsetZ;
+                // this.camera.position.y = this.model.position.y + 2;
                 right=false;
                 }
               }

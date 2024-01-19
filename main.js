@@ -8,6 +8,7 @@ import { handleFormSubmission } from "./functions.js"
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import {FontLoader} from 'three/examples/jsm/loaders/FontLoader';
 import {TextGeometry} from 'three/examples/jsm/geometries/TextGeometry';
+import { degToRad } from "three/src/math/MathUtils.js";
 
 
 
@@ -167,8 +168,6 @@ function LoadModel(){
     }
   })
 
-  
-
   //another user model
   fbxLoader.load("./src/character.fbx", (fbx) => {
     const model = fbx;
@@ -180,6 +179,7 @@ function LoadModel(){
       })
 
       model.position.set(3400, -112, 13600);
+      // model.position.set(3400,-112,10400);
       model.scale.set(0.4, 0.4, 0.4);
       model.rotation.y = THREE.MathUtils.degToRad(-180);
 
@@ -205,9 +205,6 @@ function LoadModel(){
     characterControl = new CharacterControls( model, mixer, animationmap, orbitControls, camera, 'Idle');
 
   });
-
- 
-
 
   //load reception model
   loader.load("./src/reception.glb", (gltf)=> {
@@ -255,8 +252,159 @@ function LoadModel(){
     // Play the animation
     repAnimationAction.play();
     repMixer.update(clock.getDelta())
+  });
+
+  //load trash model
+  loader.load("./src/trash_bin.glb",(gltf)=>{
+    const model=gltf.scene;
+    model.traverse((object)=>{
+      if(object.isMesh){
+        object.castShadow=true;
+      }
+      model.position.set(4200,-112,10520);
+      model.scale.set(30,30,30);
+      scene.add(model);
+    })
+  });
+
+  //load sofa model
+  loader.load("./src/modern__sofa.glb",(gltf)=>{
+    const model=gltf.scene;
+    model.traverse((object)=>{
+      if(object.isMesh){
+        object.castShadow=true;
+      }
+    })
+
+    for (let i = 0  ; i < 4; i++) {        
+      const clonedModel = gltf.scene.clone();
+      clonedModel.position.set( 4150-(i*550),-85, 11040);
+      if(i%2!=0){
+        clonedModel.rotation.y=THREE.MathUtils.degToRad(90);
+      }else{
+        clonedModel.rotation.y=THREE.MathUtils.degToRad(-90);
+      }
+      clonedModel.scale.set(75,75,75);
+      scene.add(clonedModel);
+    }
   })
+
+  //load cubicle model
+  loader.load("./src/office_desk.glb",(gltf)=>{
+    const model=gltf.scene;
+    model.traverse((object)=>{
+      if(object.isMesh){
+        object.castShadow=true;
+      }
+    })
+
+    for(let j=0;j<3;j++){
+      for (let i = 0  ; i < 3; i++) {        
+        const clonedModel = gltf.scene.clone();
+        clonedModel.position.set( 3550+(j*200),-112, 10740-(i*200));
+        clonedModel.rotation.y=THREE.MathUtils.degToRad(180);
+        scene.add(clonedModel);
+      }
+    }
+  })
+
+  //load printer
+  loader.load('./src/printer.glb', (gltf)=>{
+    const model=gltf.scene;
+    model.traverse((obj)=>{
+      if(obj.isMesh){
+        obj.castShadow=true;
+      }
+    })
+
+    model.position.set(2400, -112, 10500);
+    model.scale.set(2000,2000,2000);
+    model.rotation.y=THREE.MathUtils.degToRad(90);
+    scene.add(model);
+    })
+
+  //load plant model
+  loader.load("./src/free__livistona_chinensis_-_fan_palm.glb",(gltf)=>{
+    const model=gltf.scene;
+    model.traverse((object)=>{
+      if(object.isMesh){
+        object.castShadow=true;
+      }
+    })
+
+      for (let i = 0  ; i < 2; i++) {        
+        const clonedModel = gltf.scene.clone();
+        clonedModel.position.set( 2800+(i*1000),-112, 11040);
+        clonedModel.scale.set(50,50,50)
+        scene.add(clonedModel);
+      }
+  })
+
+   //load drawer model
+   loader.load("./src/office_drawer.glb",(gltf)=>{
+    const model=gltf.scene;
+    model.traverse((object)=>{
+      if(object.isMesh){
+        object.castShadow=true;
+      }
+      model.position.set(4150,-112,10720);
+      model.scale.set(30,30,30);
+      scene.add(model);
+    })
+  })
+
+  //load sm_chair
+  loader.load("./src/sm_chair_table.glb",(gltf)=>{
+    const model=gltf.scene;
+    model.traverse((object)=>{
+      if(object.isMesh){
+        object.castShadow=true;
+      }
+      for (let i = 0  ; i < 3; i++) {        
+        const clonedModel = gltf.scene.clone();
+        clonedModel.position.set( 2950,-112, 10740-(i*200));
+        clonedModel.scale.set(45,45,45)
+        scene.add(clonedModel);
+      }
+    })
+  })
+
+  // //chair table
+  // loader.load("./src/table_and_chairs.glb",(gltf)=>{
+  //   const model=gltf.scene;
+  //   model.traverse((object)=>{
+  //     if(object.isMesh){
+  //       object.castShadow=true;
+  //     }
+  //     for (let i = 0  ; i < 3; i++) {        
+  //       const clonedModel = gltf.scene.clone();
+  //       // clonedModel.position.set( 2650,-112, 10690-(i*300));
+  //       clonedModel.position.set( 2950,-112, 10740-(i*200));
+  //       clonedModel.scale.set(1.7,1.7,1.7)
+  //       scene.add(clonedModel);
+  //     }
+  //   })
+  // })
+
+  // loader.load("./src/table_and_chair_4.glb",(gltf)=>{
+  //   const model=gltf.scene;
+  //   model.traverse((object)=>{
+  //     if(object.isMesh){
+  //       object.castShadow=true;
+  //     }
+  //     for (let i = 0  ; i < 2; i++) {        
+  //       const clonedModel = gltf.scene.clone();
+  //       clonedModel.position.set( 2650,-112, 10740-(i*400));
+  //       clonedModel.scale.set(50.7,50.7,50.7)
+  //       scene.add(clonedModel);
+  //     }
+  //   })
+  // })
+
 }
+
+
+
 
 
 

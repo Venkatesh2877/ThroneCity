@@ -50,7 +50,7 @@ function loadLobby(body){
                 size:30,
                 font:droidFont,
               });
-              const textMaterial=new THREE.MeshNormalMaterial();
+              const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
               const textMesh=new THREE.Mesh(textGeometry, textMaterial);
               textMesh.position.set(2530,55,9900);
               // textMesh.position.x=350;
@@ -89,7 +89,7 @@ function loadLobby(body){
                   size:30,
                   font:droidFont,
                 });
-                const textMaterial=new THREE.MeshNormalMaterial();
+                const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
                 const textMesh=new THREE.Mesh(textGeometry, textMaterial);
                 textMesh.position.set((i*350)+2530,55,9900);
                 scene.add(textMesh);
@@ -124,7 +124,7 @@ function loadLobby(body){
               size:30,
               font:droidFont,
             });
-            const textMaterial=new THREE.MeshNormalMaterial();
+            const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
             const textMesh=new THREE.Mesh(textGeometry, textMaterial);
             textMesh.position.set((350*(list.length-1))+2530,55,9900);
             // textMesh.position.x=350;

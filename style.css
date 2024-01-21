@@ -74,6 +74,11 @@ canvas{
     button{
         margin-top: 20px;
         font-size: 2rem;
+        background-color: #efefef; 
+        color: black;
+        text-align: center;
+        margin-top: 10px;
+        font-family: sans-serif;
     }
 
     div{

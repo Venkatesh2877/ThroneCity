@@ -229,7 +229,7 @@ function LoadModel(){
               size:15,
               font:droidFont,
             });
-            const textMaterial=new THREE.MeshNormalMaterial();
+            const textMaterial=new THREE.MeshBasicMaterial({color:0xf2f2f2});
             const textMesh=new THREE.Mesh(textGeometry, textMaterial);
             textMesh.position.set(4200,-40,10560);
             textMesh.rotation.y = THREE.MathUtils.degToRad(-90);

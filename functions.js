@@ -53,8 +53,6 @@ function loadLobby(body){
               const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
               const textMesh=new THREE.Mesh(textGeometry, textMaterial);
               textMesh.position.set(2530,55,9900);
-              // textMesh.position.x=350;
-              // textMesh.position.z=-120;
               scene.add(textMesh);
             }
           )
@@ -149,7 +147,7 @@ function loadLobby(body){
   }
 
   // Function to handle form submission
-function handleFormSubmission(event) {
+async function handleFormSubmission(event) {
     event.preventDefault(); // Prevent the default form submission
     canvas.style.opacity = "1";
     document.querySelector('.input').style.display = "none";
@@ -160,11 +158,31 @@ function handleFormSubmission(event) {
       console.log("company");
       sessionStorage.setItem("companyId", event.target.Company.value);
       sessionStorage.removeItem('username');
+      const response = await fetch(`http://20.25.46.73:8081/api/getCertificatesUploaded?username=Venkatesh&dmccId_certs=${event.target.Company.value}`, {
+        method: "GET", 
+        headers: {
+          "Content-Type": "application/json", 
+        },
+      });
+      const jsonData= await response.json();
+      console.log(event.target.Company.value, jsonData);
 
     }else if(event.target.elements.confirmPassword){
       //loadLobby({userName:event.target.username, password:event.target.password, confirmPassword:event.target.confirmPassword});
       sessionStorage.removeItem('username');
       sessionStorage.removeItem('companyId');
+      const body={
+        "username":event.target.username.value
+      }
+      const response = await fetch("http://20.25.46.73:8081/api/registerenrolluserdmcc", {
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json", 
+        },
+        body: JSON.stringify(body), 
+      });
+      const jsonData= await response.json();
+      console.log(event.target.username.value, jsonData);
       list=[];
       
     }else if(event.target.elements.companyName){
@@ -176,6 +194,44 @@ function handleFormSubmission(event) {
         emirateID:event.target.elements.emirateID.value, bankStatement:event.target.elements.bankStatement.value,
       });
       console.log(list);
+      // const body={
+      //   "Incorporation":,
+      //   "MoaAndAoa":,
+      //   "Incumberency":,
+      //   "UndertakingLetterOfShareCapital":,
+      //   "AuthorizationLetter":,
+      //   "DeclerationOfUltimateBenefitialOwners":,
+      //   "ValidPassportCopy":,
+      //   "UtilityBillForAddressProof":,
+      //   "EmirateId":,
+      //   "BussinessProfile":,
+      //   "IncorporationOfSubsidaryInDmcc":,
+      //   "data":{
+      //     "username": sessionStorage.getItem("username"),
+      //     "DmccId_certs":event.target.elements.id.value,
+      //     "StatusIncorporation": true ,
+      //     "StatusMoaAndAoa": true,
+      //     "StatusIncumberency": true,
+      //     "StatusUndertakingLetterOfShareCapital": true,
+      //     "StatusAuthorizationLetter": true,
+      //     "StatusDeclerationOfUltimateBenefitialOwners": true,
+      //     "StatusValidPassportCopy": true,
+      //     "StatusUtilityBillForAddressProof": true,
+      //     "StatusEmirateId": true,
+      //     "StatusBussinessProfile": true,
+      //     "StatusIncorporationOfSubsidaryInDmcc": true
+      //     },      
+      // }
+            
+      // const response = await fetch(`http://20.25.46.73:8081/api/putCertificatesUploaded`, {
+      //   method: "POST", 
+      //   headers: {
+      //     "Content-Type": "application/json", 
+      //   },
+      //   body: JSON.stringify(body), 
+      // });
+      // const jsonData= await response.json();
+      // console.log(event.target.Company.value, jsonData);
       loadLobby({task:"newCompany"})
 
     }else{

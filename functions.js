@@ -5,6 +5,7 @@ import {TextGeometry} from 'three/examples/jsm/geometries/TextGeometry';
 import {TTFLoader} from 'three/examples/jsm/loaders/TTFLoader';
 import {FontLoader} from 'three/examples/jsm/loaders/FontLoader';
 import { updateShowingDetail,updateMovement } from "./characterControls";
+import axios from "axios";
 
 
 var formData = new FormData();
@@ -22,129 +23,255 @@ ESTABLISHMENTCARDMempac:"./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf", Mempa
 {companyName:"Honda", logo:"https://w7.pngwing.com/pngs/540/52/png-transparent-honda-logo-car-honda-integra-toyota-honda-angle-text-rectangle.png",id:"company0004", bankName:"Canada Bank",legalStatus:"Legal",shareHolderName:"Vishnu", roleInCompany:"CTO", CertificateOfRegistration:"./src/assets/Certificate of registration.pdf", 
 ESTABLISHMENTCARDMempac:"./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf", MempacLicenseCertificate:"./src/assets/Mempac License Certificate 2020.pdf", SHARECERTIFICATE:"./src/assets/SHARE CERTIFICATE.pdf",MempacELicenseCertificate:"./src/assets/Mempac -E-License certificate0.pdf",MOA:"/src/assets/MOA.pdf"}]
 
+var dmcc_ids=["Dmcc-1011", "Dmcc-1012"];
+export var newList=[];
 
 
+//function to make api call to get company details;
+async function getCompanyDetailAndDocument(username,dmcc_id){
+  console.log(username,dmcc_id);
+  let eachList={};
+  var files,data;
+ 
+  //get the certificates hash values for each company
+  let response = await fetch(`http://20.25.46.73:8081/api/getCertificatesUploaded?username=${username}&dmccId_certs=${dmcc_id}`, {
+    method: "GET", 
+    headers: {
+      "Content-Type": "application/json", 
+    },
+  });
+  let jsonData= await response.json();
+  eachList={...eachList,...jsonData.data}
+
+
+   response = await fetch(`http://20.25.46.73:8081/api/getOnBoardingDetailsAndShareHolding?DmccId=${dmcc_id}&username=${username}`, {
+    method: "GET", 
+    headers: {
+      "Content-Type": "application/json", 
+    },
+  });
+   jsonData= await response.json();
+  eachList={...eachList,...jsonData.result}
+
+    return eachList;
+}
+
+//get the base64 from the hashvalue;
+function getBase64(username,dmcc_id,hashvalue){
+  axios({
+    method:"get",
+    url:`http://20.25.46.73:8081/api/getfile?docId=${hashvalue}&dmccId_certs=${dmcc_id}&username=${username}`,
+  })
+    .then(response=>{
+      console.log(response, "base64")
+    })
+    .catch(error=>{
+      console.error(error);
+    });``
+}
+
+//post the new company details
+function addNewCompany(certBody,detailBody){
+  axios({
+    method: 'post',
+    url: `http://20.25.46.73:8081/api/putCertificatesUploaded`,
+    body:certBody
+  })
+    .then(response => {
+      console.log(response.data,"post cert");
+      files=response?.data?.datas
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
+  //get company details for each company
+    axios({
+      method: 'post',
+      url: `http://20.25.46.73:8081/api/storeOnboardingCompanyAndShareHolding`,
+      body:detailBody
+    })
+      .then(response => {
+        console.log(response.data,"post detail");
+        files=response?.data?.data
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+}
+   
+
+//function to laod lobby
+// function loadLobby(body){
+//     const loader = new GLTFLoader();
+//     console.log(body);
+//     // Load the 3D model
+//     loader.load("./src/office_cabin.glb",  (gltf)=> {
+//           gltf.scene.traverse(c=>{  
+//             c.castShadow=true;
+//           });
+
+//       if(body.companyId){
+//         const company= list.find((each)=>each.id==body.companyId);
+//         if(company){
+//           gltf.scene.position.set(2700, -112, 9040);
+//           gltf.scene.scale.set(30,40,40);
+//           gltf.scene.rotation.y= THREE.MathUtils.degToRad(180);
+//           scene.add(gltf.scene);
+
+//           const fontLoader=new FontLoader();
+//           fontLoader.load(
+//             'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
+//             (droidFont)=>{
+//               const textGeometry= new TextGeometry(company.companyName,{
+//                 height:2,
+//                 size:30,
+//                 font:droidFont,
+//               });
+//               const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
+//               const textMesh=new THREE.Mesh(textGeometry, textMaterial);
+//               textMesh.position.set(2530,55,9900);
+//               scene.add(textMesh);
+//             }
+//           )
+
+//           // Image
+//           const textureLoader = new THREE.TextureLoader();
+//           console.log(company.logo)
+//           const imageTexture = textureLoader.load(company.logo); // Set the path to your image
+//           const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
+//           const imageGeometry = new THREE.PlaneGeometry(50, 50); // Adjust the size as needed
+//           const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
+//           imageMesh.position.set(2500,75,9900); // Adjust the position as needed
+
+//           scene.add(imageMesh)
+//         }
+               
+
+//       }else if(body.userName){
+//         //  Create multiple instances of the model
+//         for (let i = 0  ; i < list.length; i++) {        
+//             const clonedModel = gltf.scene.clone();
+//             clonedModel.position.set((i * 350)+2700, -112, 9040);
+//             clonedModel.scale.set(30, 40, 40);
+//             clonedModel.rotation.y = THREE.MathUtils.degToRad(180);
+//             scene.add(clonedModel);
+//             const fontLoader=new FontLoader();
+//             fontLoader.load(
+//               'node_modules/three/examples/fonts/droid/droid_sans_mono_regular.typeface.json',
+//               (droidFont)=>{
+//                 const textGeometry= new TextGeometry(list[i].companyName,{
+//                   height:2,
+//                   size:30,
+//                   font:droidFont,
+//                 });
+//                 const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
+//                 const textMesh=new THREE.Mesh(textGeometry, textMaterial);
+//                 textMesh.position.set((i*350)+2530,55,9900);
+//                 scene.add(textMesh);
+//               }
+//             )
+            
+//                 // Image
+//             const textureLoader = new THREE.TextureLoader();
+//             console.log(list[i].logo)
+//             const imageTexture = textureLoader.load(list[i]?.logo); // Set the path to your image
+//             const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
+//             const imageGeometry = new THREE.PlaneGeometry(50, 50); // Adjust the size as needed
+//             const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
+//             imageMesh.position.set((i*350)+2500,75,9900); // Adjust the position as needed
+
+//             scene.add(imageMesh)
+//               }
+
+//       } else if(body.task){
+//         gltf.scene.position.set((350*(list.length-1))+2700, -112, 9040);
+//         gltf.scene.scale.set(30,40,40);
+//         gltf.scene.rotation.y= THREE.MathUtils.degToRad(180);
+//         scene.add(gltf.scene);
+        
+
+//         const fontLoader=new FontLoader();
+//         fontLoader.load(
+//           'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
+//           (droidFont)=>{
+//             const textGeometry= new TextGeometry(list[list.length-1].companyName,{
+//               height:2,
+//               size:30,
+//               font:droidFont,
+//             });
+//             const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
+//             const textMesh=new THREE.Mesh(textGeometry, textMaterial);
+//             textMesh.position.set((350*(list.length-1))+2530,55,9900);
+//             // textMesh.position.x=350;
+//             // textMesh.position.z=-120;
+//             scene.add(textMesh);
+//           }
+//         ) 
+        
+//             // Image
+//             const textureLoader = new THREE.TextureLoader();
+//             const imageTexture = textureLoader.load(list[list.length-1].logo); // Set the path to your image
+//             const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
+//             const imageGeometry = new THREE.PlaneGeometry(50, 50); // Adjust the size as needed
+//             const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
+//             imageMesh.position.set((350*(list.length-1))+2500,75,9900); // Adjust the position as needed
+
+//             scene.add(imageMesh)
+
+//       }    
+//     });
+  
+//   }
+
+// new lobby
 function loadLobby(body){
-    const loader = new GLTFLoader();
-    console.log(body);
-    // Load the 3D model
-    loader.load("./src/office_cabin.glb",  (gltf)=> {
-          gltf.scene.traverse(c=>{  
-            c.castShadow=true;
-          });
+  const loader = new GLTFLoader();
+  console.log(body);
+  // Load the 3D model
+  loader.load("./src/office_cabin.glb",  (gltf)=> {
+        gltf.scene.traverse(c=>{  
+          c.castShadow=true;
+        });
 
-      if(body.companyId){
-        const company= list.find((each)=>each.id==body.companyId);
-        if(company){
-          gltf.scene.position.set(2700, -112, 9040);
-          gltf.scene.scale.set(30,40,40);
-          gltf.scene.rotation.y= THREE.MathUtils.degToRad(180);
-          scene.add(gltf.scene);
-
+        for (let i = 0  ; i < body.length; i++) {        
+          const clonedModel = gltf.scene.clone();
+          clonedModel.position.set((i * 350)+2700, -112, 9040);
+          clonedModel.scale.set(30, 40, 40);
+          clonedModel.rotation.y = THREE.MathUtils.degToRad(180);
+          scene.add(clonedModel);
           const fontLoader=new FontLoader();
           fontLoader.load(
-            'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
+            'node_modules/three/examples/fonts/droid/droid_sans_mono_regular.typeface.json',
             (droidFont)=>{
-              const textGeometry= new TextGeometry(company.companyName,{
+              const textGeometry= new TextGeometry(body[i].CompanyName,{
                 height:2,
                 size:30,
                 font:droidFont,
               });
               const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
               const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-              textMesh.position.set(2530,55,9900);
+              textMesh.position.set((i*350)+2530,55,9900);
               scene.add(textMesh);
             }
           )
+          
+              // Image
+          // const textureLoader = new THREE.TextureLoader();
+          // // console.log(list[i].logo)
+          // const imageTexture = textureLoader.load(list[i]?.logo); // Set the path to your image
+          // const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
+          // const imageGeometry = new THREE.PlaneGeometry(50, 50); // Adjust the size as needed
+          // const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
+          // imageMesh.position.set((i*350)+2500,75,9900); // Adjust the position as needed
 
-          // Image
-          const textureLoader = new THREE.TextureLoader();
-          console.log(company.logo)
-          const imageTexture = textureLoader.load(company.logo); // Set the path to your image
-          const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
-          const imageGeometry = new THREE.PlaneGeometry(50, 50); // Adjust the size as needed
-          const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
-          imageMesh.position.set(2500,75,9900); // Adjust the position as needed
-
-          scene.add(imageMesh)
+          // scene.add(imageMesh)
         }
-               
 
-      }else if(body.userName){
-        //  Create multiple instances of the model
-        for (let i = 0  ; i < list.length; i++) {        
-            const clonedModel = gltf.scene.clone();
-            clonedModel.position.set((i * 350)+2700, -112, 9040);
-            clonedModel.scale.set(30, 40, 40);
-            clonedModel.rotation.y = THREE.MathUtils.degToRad(180);
-            scene.add(clonedModel);
-            const fontLoader=new FontLoader();
-            fontLoader.load(
-              'node_modules/three/examples/fonts/droid/droid_sans_mono_regular.typeface.json',
-              (droidFont)=>{
-                const textGeometry= new TextGeometry(list[i].companyName,{
-                  height:2,
-                  size:30,
-                  font:droidFont,
-                });
-                const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
-                const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-                textMesh.position.set((i*350)+2530,55,9900);
-                scene.add(textMesh);
-              }
-            )
-            
-                // Image
-            const textureLoader = new THREE.TextureLoader();
-            console.log(list[i].logo)
-            const imageTexture = textureLoader.load(list[i]?.logo); // Set the path to your image
-            const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
-            const imageGeometry = new THREE.PlaneGeometry(50, 50); // Adjust the size as needed
-            const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
-            imageMesh.position.set((i*350)+2500,75,9900); // Adjust the position as needed
+  });
 
-            scene.add(imageMesh)
-              }
-
-      } else if(body.task){
-        gltf.scene.position.set((350*(list.length-1))+2700, -112, 9040);
-        gltf.scene.scale.set(30,40,40);
-        gltf.scene.rotation.y= THREE.MathUtils.degToRad(180);
-        scene.add(gltf.scene);
-        
-
-        const fontLoader=new FontLoader();
-        fontLoader.load(
-          'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
-          (droidFont)=>{
-            const textGeometry= new TextGeometry(list[list.length-1].companyName,{
-              height:2,
-              size:30,
-              font:droidFont,
-            });
-            const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
-            const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-            textMesh.position.set((350*(list.length-1))+2530,55,9900);
-            // textMesh.position.x=350;
-            // textMesh.position.z=-120;
-            scene.add(textMesh);
-          }
-        ) 
-        
-            // Image
-            const textureLoader = new THREE.TextureLoader();
-            const imageTexture = textureLoader.load(list[list.length-1].logo); // Set the path to your image
-            const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
-            const imageGeometry = new THREE.PlaneGeometry(50, 50); // Adjust the size as needed
-            const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
-            imageMesh.position.set((350*(list.length-1))+2500,75,9900); // Adjust the position as needed
-
-            scene.add(imageMesh)
-
-      }    
-    });
-  
-  }
+}
 
   // Function to handle form submission
 async function handleFormSubmission(event) {
@@ -235,10 +362,63 @@ async function handleFormSubmission(event) {
       loadLobby({task:"newCompany"})
 
     }else{
-      loadLobby({userName:event.target.username.value, password:event.target.password.value});
-      console.log("old user");
+      // loadLobby({userName:event.target.username.value, password:event.target.password.value});
+      // console.log("old user");
       sessionStorage.setItem("username", event.target.username.value);
       sessionStorage.removeItem('companyId');
+
+// {
+  
+//       //api integration
+//       //    const body={
+//       //   "Incorporation":,
+//       //   "MoaAndAoa":,
+//       //   "Incumberency":,
+//       //   "UndertakingLetterOfShareCapital":,
+//       //   "AuthorizationLetter":,
+//       //   "DeclerationOfUltimateBenefitialOwners":,
+//       //   "ValidPassportCopy":,
+//       //   "UtilityBillForAddressProof":,
+//       //   "EmirateId":,
+//       //   "BussinessProfile":,
+//       //   "IncorporationOfSubsidaryInDmcc":,
+//       //   "data":{
+//       //     "username": sessionStorage.getItem("username"),
+//       //     "DmccId_certs":event.target.elements.id.value,
+//       //     "StatusIncorporation": true ,
+//       //     "StatusMoaAndAoa": true,
+//       //     "StatusIncumberency": true,
+//       //     "StatusUndertakingLetterOfShareCapital": true,
+//       //     "StatusAuthorizationLetter": true,
+//       //     "StatusDeclerationOfUltimateBenefitialOwners": true,
+//       //     "StatusValidPassportCopy": true,
+//       //     "StatusUtilityBillForAddressProof": true,
+//       //     "StatusEmirateId": true,
+//       //     "StatusBussinessProfile": true,
+//       //     "StatusIncorporationOfSubsidaryInDmcc": true
+//       //     },      
+//       // }
+// }
+
+    const promiseArray = dmcc_ids.map((e) => {
+      return Promise.resolve()
+        .then(() => getCompanyDetailAndDocument(sessionStorage.getItem("username"), e))
+        .then(eachList => {
+          newList.push(eachList);
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    });
+
+    Promise.all(promiseArray)
+      .then(() => {
+        console.log("load lobby", newList);
+        loadLobby(newList);
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
     }
 }
 

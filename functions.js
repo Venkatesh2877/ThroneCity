@@ -31,7 +31,6 @@ export var newList=[];
 async function getCompanyDetailAndDocument(username,dmcc_id){
   console.log(username,dmcc_id);
   let eachList={};
-  var files,data;
  
   //get the certificates hash values for each company
   let response = await fetch(`http://20.25.46.73:8081/api/getCertificatesUploaded?username=${username}&dmccId_certs=${dmcc_id}`, {
@@ -226,6 +225,7 @@ function addNewCompany(certBody,detailBody){
 //   }
 
 // new lobby
+
 function loadLobby(body){
   const loader = new GLTFLoader();
   console.log(body);
@@ -281,18 +281,30 @@ async function handleFormSubmission(event) {
     updateMovement(true);
 
     if(event.target.elements.Company){
-      loadLobby({companyId:event.target.Company.value});
-      console.log("company");
       sessionStorage.setItem("companyId", event.target.Company.value);
       sessionStorage.removeItem('username');
-      const response = await fetch(`http://20.25.46.73:8081/api/getCertificatesUploaded?username=Venkatesh&dmccId_certs=${event.target.Company.value}`, {
-        method: "GET", 
-        headers: {
-          "Content-Type": "application/json", 
-        },
-      });
-      const jsonData= await response.json();
-      console.log(event.target.Company.value, jsonData);
+
+      const promiseArray = [
+        getCompanyDetailAndDocument("Venkatesh", sessionStorage.getItem("companyId"))
+          .then(eachList => {
+            newList.push(eachList);
+            return eachList;
+          })
+          .catch(error => {
+            console.error("Error:", error);
+          })
+        ];
+      
+      Promise.all(promiseArray)
+        .then(results => {
+          const newList = results.filter(eachList => eachList); // Filter out undefined results
+          console.log("load lobby", newList);
+          loadLobby(newList);
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+      
 
     }else if(event.target.elements.confirmPassword){
       //loadLobby({userName:event.target.username, password:event.target.password, confirmPassword:event.target.confirmPassword});
@@ -362,43 +374,8 @@ async function handleFormSubmission(event) {
       loadLobby({task:"newCompany"})
 
     }else{
-      // loadLobby({userName:event.target.username.value, password:event.target.password.value});
-      // console.log("old user");
       sessionStorage.setItem("username", event.target.username.value);
       sessionStorage.removeItem('companyId');
-
-// {
-  
-//       //api integration
-//       //    const body={
-//       //   "Incorporation":,
-//       //   "MoaAndAoa":,
-//       //   "Incumberency":,
-//       //   "UndertakingLetterOfShareCapital":,
-//       //   "AuthorizationLetter":,
-//       //   "DeclerationOfUltimateBenefitialOwners":,
-//       //   "ValidPassportCopy":,
-//       //   "UtilityBillForAddressProof":,
-//       //   "EmirateId":,
-//       //   "BussinessProfile":,
-//       //   "IncorporationOfSubsidaryInDmcc":,
-//       //   "data":{
-//       //     "username": sessionStorage.getItem("username"),
-//       //     "DmccId_certs":event.target.elements.id.value,
-//       //     "StatusIncorporation": true ,
-//       //     "StatusMoaAndAoa": true,
-//       //     "StatusIncumberency": true,
-//       //     "StatusUndertakingLetterOfShareCapital": true,
-//       //     "StatusAuthorizationLetter": true,
-//       //     "StatusDeclerationOfUltimateBenefitialOwners": true,
-//       //     "StatusValidPassportCopy": true,
-//       //     "StatusUtilityBillForAddressProof": true,
-//       //     "StatusEmirateId": true,
-//       //     "StatusBussinessProfile": true,
-//       //     "StatusIncorporationOfSubsidaryInDmcc": true
-//       //     },      
-//       // }
-// }
 
     const promiseArray = dmcc_ids.map((e) => {
       return Promise.resolve()
@@ -436,15 +413,26 @@ const handleCancel=()=>{
 //display each company detail
 function displayDetail(list){
   // Populate the company list
-
+  console.log(list);
     canvas.style.opacity=0.2;
     companyListElement.innerHTML=`
-    <h1>Company Name: ${list.companyName}</h1>
-    <h2>Company Id: ${list.id}</h2>
-    <h2>Bank Name: ${list.bankName}</h2>
-    <h2>Legal Status: ${list.legalStatus}</h2>
-    <h2>Share Holder Name: ${list.shareHolderName}</h2>
-    <h2>Role In Company: ${list.roleInCompany}</h2>
+    <h1>Company Name: ${list.CompanyName}</h1>
+    <h2>DmccId Id: ${list.DmccId}</h2>
+    <h2>Financial Year Of The Comapny: ${list.FinancialYearOfTheComapny}</h2>
+    <h2>Proposed Bank Of The Company: ${list.ProposedBankOfTheCompany}</h2>
+    <h2>Activities Of The Dmcc Company: ${list.ActivitiesOfTheDmccCompany}</h2>
+    <h2>Facility Of The Dmcc Company: ${list.FacilityOfTheDmccCompany}</h2>
+    <h2>Legal Status Of The Company: ${list.LegalStatusOfTheCompany}</h2>
+    <h2>Share Capital: ${list.ShareCapital}</h2>
+    <h2>Name Of The ShareHolder: ${list.NameOfTheShareHolder}</h2>
+    <h2>Select Role Of The Company: ${list.SelectRoleOfTheCompany}</h2>
+    <h2>Emirates Id: ${list.EmiratesId}</h2>
+    <h2>Share Holding Percentage: ${list.ShareHoldingPercentage}</h2>
+    <h2>Official Mail Address: ${list.OfficialMailAddress}</h2>
+    <h2>Contact Number: ${list.ContactNumber}</h2>
+    <h2>Additional Details: ${list.AdditionalDetails}</h2>
+
+
     <div class="docLink"><a href="${list.CertificateOfRegistration}" target="_blank">Certificate Of Registration</a></div>
     <div class="docLink"><a href="${list.ESTABLISHMENTCARDMempac}" target="_blank">ESTABLISHMENT CARD Mempac</a></div>
     <div class="docLink"><a href="${list.MempacLicenseCertificate}" target="_blank">Mempac License Certificate</a></div>
@@ -452,7 +440,47 @@ function displayDetail(list){
     <div class="docLink"><a href="${list.MempacELicenseCertificate}" target="_blank">Mempac-E-License Certificate</a></div>
     <div class="docLink"><a href="${list.MOA}" target="_blank">MOA</a></div>
     
-  `;
+  `
+  ;
+  
+
+
+
+
+// AuthorizationLetter:""
+// BussinessProfile:""
+// DeclerationOfUltimateBenefitialOwners: ""
+// DmccId_certs:""
+// EmirateId: ""
+// EmiratesId: "DR6767"
+// FacilityOfTheDmccCompany: "Nil"
+// FinancialYearOfTheComapny: "2016"
+// Incorporation: ""
+// IncorporationOfSubsidaryInDmcc: ""
+// Incumberency: ""
+// LegalStatusOfTheCompany: "Running"
+// MoaAndAoa: ""
+// NameOfTheShareHolder: "Nil"
+// OfficialMailAddress: "venkatesh@simplyfi.com"
+// ProposedBankOfTheCompany: "HDFC"
+// SelectRoleOfTheCompany:"Nil"
+// ShareCapital: "Nil"
+// ShareHoldingPercentage: "12%"
+// StatusAuthorizationLetter: false
+// StatusBussinessProfile: false
+// StatusDeclerationOfUltimateBenefitialOwners: false
+// StatusEmirateId: false
+// StatusIncorporation: false
+// StatusIncorporationOfSubsidaryInDmcc: false
+// StatusIncumberency:false
+// StatusMoaAndAoa: false
+// StatusUndertakingLetterOfShareCapital: false
+// StatusUtilityBillForAddressProof: false
+// StatusValidPassportCopy: false
+// UndertakingLetterOfShareCapital: ""
+// UtilityBillForAddressProof: ""
+// ValidPassportCopy: ""
+
   
    // Create a button element
    var button = document.createElement("button");

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import {newUserFormHTML, clientUserFormHTML, registerCompanyFormHTML} from './inputForm.js';
 import { canvas,scene } from "./main.js";
-import { list,displayDetail} from "./functions.js";
+import { list,displayDetail, newList} from "./functions.js";
 
 const DIRECTIONS = ['w', 'a', 's', 'd'];
 var loading= true,right=true, left=true, faceXPos=false, faceXNeg=true, faceZPos=false, faceZNeg=false;
@@ -282,22 +282,17 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
               if(sessionStorage.getItem('companyId')){
                 if((this.model.position.x>2600 && this.model.position.x<2700)&&(this.model.position.z>9650 && this.model.position.z<9700) && showingDetail){
                   updateMovement(false);
-                  // console.log("entered ", sessionStorage.getItem('companyId'));
-                  const filteredList = list.filter((e) => {
-                    return e.id === sessionStorage.getItem('companyId');
-                  });
-                  displayDetail(filteredList[0]);
+                  displayDetail(newList[0]);
                   showingDetail=false;
                   this.model.position.z+=55;
                 }
               }else{
-                const length=list.length;
+                const length=newList.length;
               // const length=4;
                 for(var i=0;i<length;i++){
                   if((this.model.position.x>(i * 350)+2600 && this.model.position.x<(i * 350)+2700 )&&(this.model.position.z>9650 && this.model.position.z<9700) && showingDetail){
                     updateMovement(false);
-                    // console.log("enter comapm", list[Math.floor((i*200)/200)-1]);
-                    displayDetail(list[Math.floor((this.model.position.x-2600)/350)]);
+                    displayDetail(newList[Math.floor((this.model.position.x-2600)/350)]);
                     showingDetail=false;
                     this.model.position.z+=55;
                 }

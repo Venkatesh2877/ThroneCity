@@ -178,8 +178,8 @@ function LoadModel(){
           }
       })
 
-      model.position.set(3400, -112, 13600);
-      // model.position.set(3400,-112,10400);
+      // model.position.set(3400, -112, 13600);
+      model.position.set(3400,-112,10400);
       model.scale.set(0.4, 0.4, 0.4);
       model.rotation.y = THREE.MathUtils.degToRad(-180);
 

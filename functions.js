@@ -118,6 +118,7 @@ function getBase64(username,dmcc_id,hashvalue){
 
 //post the new company details
 function addNewCompany(certBody,detailBody){
+  console.log("addNewCompany", certBody,detailBody)
   axios({
     method: 'post',
     url: `http://20.25.46.73:8081/api/putCertificatesUploaded`,
@@ -360,26 +361,66 @@ async function handleFormSubmission(event) {
       const body={
         "username":event.target.username.value
       }
-      const response = await fetch("http://20.25.46.73:8081/api/registerenrolluserdmcc", {
-        method: "POST", 
-        headers: {
-          "Content-Type": "application/json", 
-        },
-        body: JSON.stringify(body), 
-      });
-      const jsonData= await response.json();
-      console.log(event.target.username.value, jsonData);
-      list=[];
+      // const response = await fetch("http://20.25.46.73:8081/api/registerenrolluserdmcc", {
+      //   method: "POST", 
+      //   headers: {
+      //     "Content-Type": "application/json", 
+      //   },
+      //   body: JSON.stringify(body), 
+      // });
+      // const jsonData= await response.json();
+      // console.log(event.target.username.value, jsonData);
+      dmcc_ids=[];
+
       
     }else if(event.target.elements.companyName){
-      console.log("register company");
-      list.push({
-        companyName:event.target.elements.companyName.value, id:event.target.elements.id.value, bankName:event.target.elements.bankName.value,
-        legalStatus:event.target.elements.legalStatus.value, shareHolderName:event.target.elements.shareHolderName.value, 
-        roleInCompany:event.target.elements.roleInCompany.value, passport:event.target.elements.passport.value, 
-        emirateID:event.target.elements.emirateID.value, bankStatement:event.target.elements.bankStatement.value,
-      });
-      console.log(list);
+      console.log("register company", event.target.elements);
+      var newCompany={
+        CompanyName:event.target.elements.companyName.value, 
+        DmccId:event.target.elements.DmccId.value, 
+        FinancialYearOfTheComapny:event.target.elements.FinancialYearOfTheComapny.value,
+        ProposedBankOfTheCompany:event.target.elements.ProposedBankOfTheCompany.value,
+        ActivitiesOfTheDmccCompany:event.target.elements.ActivitiesOfTheDmccCompany.value,
+        FacilityOfTheDmccCompany:event.target.elements.FacilityOfTheDmccCompany.value,
+        LegalStatusOfTheCompany:event.target.elements.LegalStatusOfTheCompany.value,
+        NameOfTheShareHolder:event.target.elements.NameOfTheShareHolder.value,
+        ShareCapital:event.target.elements.ShareCapital.value,
+        ShareHoldingPercentage:event.target.elements.ShareHoldingPercentage.value,
+        SelectRoleOfTheCompany:event.target.elements.SelectRoleOfTheCompany.value,
+        EmiratesId:event.target.elements.EmiratesId.value,
+        OfficialMailAddress:event.target.elements.OfficialMailAddress.value,
+        ContactNumber:event.target.elements.FinancialYearOfTheComapny.value,
+        AdditionalDetails:event.target.elements.AdditionalDetails.value,
+        
+        Incorporation:event.target.elements.Incorporation.value,
+        MoaAndAoa:event.target.elements.MoaAndAoa.value,
+        Incumberency:event.target.elements.Incumberency.value,
+        UndertakingLetterOfShareCapital:event.target.elements.UndertakingLetterOfShareCapital.value,
+        AuthorizationLetter:event.target.elements.AuthorizationLetter.value,
+        DeclerationOfUltimateBenefitialOwners:event.target.elements.DeclerationOfUltimateBenefitialOwners.value,
+        ValidPassportCopy:event.target.elements.ValidPassportCopy.value,
+        UtilityBillForAddressProof:event.target.elements.UtilityBillForAddressProof.value,
+        EmirateId:event.target.elements.EmirateId.value,
+        BussinessProfile:event.target.elements.BussinessProfile.value,
+        IncorporationOfSubsidaryInDmcc:event.target.elements.IncorporationOfSubsidaryInDmcc.value,
+
+        StatusIncorporation: false,
+        StatusMoaAndAoa: false,
+        StatusIncumberency: false,
+        StatusUndertakingLetterOfShareCapital: false,
+        StatusAuthorizationLetter: false,
+        StatusDeclerationOfUltimateBenefitialOwners: false,
+        StatusValidPassportCopy: false,
+        StatusUtilityBillForAddressProof: false,
+        StatusEmirateId: false,
+        StatusBussinessProfile: false,
+        StatusIncorporationOfSubsidaryInDmcc: false
+      };
+
+      // list.push(newCompany);
+      newList.push(newCompany);
+
+      console.log(newList);
       // const body={
       //   "Incorporation":,
       //   "MoaAndAoa":,
@@ -418,7 +459,8 @@ async function handleFormSubmission(event) {
       // });
       // const jsonData= await response.json();
       // console.log(event.target.Company.value, jsonData);
-      loadLobby({task:"newCompany"})
+      // loadLobby({task:"newCompany"})
+      loadLobby(newList)
 
     }else{
       sessionStorage.setItem("username", event.target.username.value);

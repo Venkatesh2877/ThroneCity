@@ -1,7 +1,7 @@
 body{
     cursor: grab;
-    background-color: black;
-    color: white;
+    background-color: black !important; 
+    color: white !important;
     font-family:Arial, Helvetica, sans-serif;
 }
 
@@ -49,60 +49,65 @@ canvas{
     display: none;
     position: absolute;
     z-index: 2;
-    top: 50%;
-    left: 50%;
+    top: 42%;
+    left: 47%;
     transform: translate(-50%, -50%);
 }
 
 
 #myForm{
-    width: 80vw;
+    width: 90vw;
     height: 80vh;
     margin: auto;
     font-size: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap; 
  
 
     input{
         height: 25px;
         width: 270px;
         margin: 20px 0px;
+        font-size: 1.7rem;
+        color: black;
     }
 
     button{
-        margin-top: 20px;
-        font-size: 2rem;
-        background-color: #efefef; 
-        color: black;
-        text-align: center;
-        margin-top: 10px;
-        font-family: sans-serif;
+        width: 270px;
     }
 
-    div{
+    .inputContainer{
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* div{
         background-color: #efefef; 
         color: black;
         text-align: center;
         margin-top: 10px;
         font-family: sans-serif;
-    }
+    } */
 }
 
 #displayCompanyDetail{
     position: absolute;
     z-index: 2;
     padding: 10px 20px;
+    width: 80vw;
+    margin: auto;
 
     .docLink{
-        margin: 40px 0px;
+        margin: 25px 0px;
         text-decoration: none;
         color: white;
         border: 2px white solid;
         padding: 10px;
         border-radius: 10px;
-        font-size: 1.5rem;
+        font-size: 2rem;
+    }
+
+    .docLink:hover{
+        color: black;
+        background-color: white;
     }
 
     /* a{
@@ -120,3 +125,15 @@ canvas{
         font-size: 1.5rem;
     }
 }
+
+.bold{
+    font-size: 2em;
+    font-weight: 100;
+    margin: 15px 10px;
+}
+
+.normal{
+    font-size: 2.5rem;
+    font-weight: 400;
+}
+

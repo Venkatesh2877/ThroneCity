@@ -268,6 +268,8 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
                   // Create a button element
                 var button = document.createElement("div");
                 button.innerHTML = "Cancel";
+                button.classList="btn btn-danger";
+                button.style.width="270px"
 
                 button.onclick = handleCancel;
 

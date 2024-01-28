@@ -506,34 +506,42 @@ function displayDetail(list){
   console.log(list);
     canvas.style.opacity=0.2;
     companyListElement.innerHTML=`
-    <h1>Company Name: ${list.CompanyName}</h1>
-    <h2>DmccId Id: ${list.DmccId}</h2>
-    <h2>Financial Year Of The Comapny: ${list.FinancialYearOfTheComapny}</h2>
-    <h2>Proposed Bank Of The Company: ${list.ProposedBankOfTheCompany}</h2>
-    <h2>Activities Of The Dmcc Company: ${list.ActivitiesOfTheDmccCompany}</h2>
-    <h2>Facility Of The Dmcc Company: ${list.FacilityOfTheDmccCompany}</h2>
-    <h2>Legal Status Of The Company: ${list.LegalStatusOfTheCompany}</h2>
-    <h2>Share Capital: ${list.ShareCapital}</h2>
-    <h2>Name Of The ShareHolder: ${list.NameOfTheShareHolder}</h2>
-    <h2>Select Role Of The Company: ${list.SelectRoleOfTheCompany}</h2>
-    <h2>Emirates Id: ${list.EmiratesId}</h2>
-    <h2>Share Holding Percentage: ${list.ShareHoldingPercentage}</h2>
-    <h2>Official Mail Address: ${list.OfficialMailAddress}</h2>
-    <h2>Contact Number: ${list.ContactNumber}</h2>
-    <h2>Additional Details: ${list.AdditionalDetails}</h2>
+    <div style="display:flex;justify-content: space-around;">
+      <div>
+        <h2>Company Details</h2>        
+        <div class="bold">Company Name: <span class="normal">${list.CompanyName||'nill'}</span></div>
+        <div class="bold">DmccId Id:  <span class="normal"> ${list.DmccId||'nill'} </span></div>
+        <div class="bold">Financial Year Of The Comapny:  <span class="normal"> ${list.FinancialYearOfTheComapny||'nill'}</span></div>
+        <div class="bold">Proposed Bank Of The Company:  <span class="normal"> ${list.ProposedBankOfTheCompany||'nill'}</span></div>
+        <div class="bold">Activities Of The Dmcc Company:  <span class="normal"> ${list.ActivitiesOfTheDmccCompany||'nill'}</span></div>
+        <div class="bold">Facility Of The Dmcc Company:  <span class="normal"> ${list.FacilityOfTheDmccCompany||'nill'}</span></div>
+        <div class="bold">Legal Status Of The Company:  <span class="normal"> ${list.LegalStatusOfTheCompany||'nill'}</span></div>
+        <div class="bold">Share Capital:  <span class="normal"> ${list.ShareCapital||'nill'}</span></div>
+        <div class="bold">Name Of The ShareHolder:  <span class="normal"> ${list.NameOfTheShareHolder||'nill'}</span></div>
+        <div class="bold">Select Role Of The Company:  <span class="normal"> ${list.SelectRoleOfTheCompany||'nill'}</span></div>
+        <div class="bold">Emirates Id:  <span class="normal"> ${list.EmiratesId||'nill'}</span></div>
+        <div class="bold"> Share Holding Percentage:  <span class="normal"> ${list.ShareHoldingPercentage||'nill'}</span></div>
+        <div class="bold">Official Mail Address:  <span class="normal"> ${list.OfficialMailAddress||'nill'}</span></div>
+        <div class="bold">Contact Number:  <span class="normal"> ${list.ContactNumber||'nill'}</span></div>
+        <div class="bold">Additional Details:  <span class="normal"> ${list.AdditionalDetails||'nill'}</span></div>
+      </div>
 
-    ${!list.StatusIncorporation ? `<div class="docLink" hashValue=${list.Incorporation} dmcc_id=${list.DmccId_certs??list.DmccId}>Incorporation</div>` : ''}
-    ${!list.StatusMoaAndAoa ? `<div class="docLink" hashValue=${list.MoaAndAoa} dmcc_id=${list.DmccId_certs??list.DmccId}>MoaAndAoa</div>` : ''}
-    ${!list.StatusIncumberency ? `<div class="docLink" hashValue=${list.Incumberency} dmcc_id=${list.DmccId_certs??list.DmccId}>Incumberency</div>` : ''}
-    ${!list.StatusUndertakingLetterOfShareCapital ? `<div class="docLink" hashValue=${list.UndertakingLetterOfShareCapital} dmcc_id=${list.DmccId_certs??list.DmccId}>UndertakingLetterOfShareCapital</div>` : ''}
-    ${!list.StatusAuthorizationLetter ? `<div class="docLink" hashValue=${list.AuthorizationLetter} dmcc_id=${list.DmccId_certs??list.DmccId}>AuthorizationLetter</div>` : ''}
+      <div>
+      <h2>Certificates</h2>
+        ${!list.StatusIncorporation ? `<div class="docLink" hashValue=${list.Incorporation} dmcc_id=${list.DmccId_certs??list.DmccId}>Incorporation</div>` : ''}
+        ${!list.StatusMoaAndAoa ? `<div class="docLink" hashValue=${list.MoaAndAoa} dmcc_id=${list.DmccId_certs??list.DmccId}>MoaAndAoa</div>` : ''}
+        ${!list.StatusIncumberency ? `<div class="docLink" hashValue=${list.Incumberency} dmcc_id=${list.DmccId_certs??list.DmccId}>Incumberency</div>` : ''}
+        ${!list.StatusUndertakingLetterOfShareCapital ? `<div class="docLink" hashValue=${list.UndertakingLetterOfShareCapital} dmcc_id=${list.DmccId_certs??list.DmccId}>UndertakingLetterOfShareCapital</div>` : ''}
+        ${!list.StatusAuthorizationLetter ? `<div class="docLink" hashValue=${list.AuthorizationLetter} dmcc_id=${list.DmccId_certs??list.DmccId}>AuthorizationLetter</div>` : ''}
 
-    ${list.StatusDeclerationOfUltimateBenefitialOwners ? `<div class="docLink" hashValue=${list.DeclerationOfUltimateBenefitialOwners} dmcc_id=${list.DmccId_certs??list.DmccId}>DeclerationOfUltimateBenefitialOwners</div>` : ''}
-    ${list.StatusValidPassportCopy ? `<div class="docLink" hashValue=${list.ValidPassportCopy} dmcc_id=${list.DmccId_certs??list.DmccId}>ValidPassportCopy</div>` : ''}
-    ${list.StatusUtilityBillForAddressProof ? `<div class="docLink" hashValue=${list.UtilityBillForAddressProof} dmcc_id=${list.DmccId_certs??list.DmccId}>UtilityBillForAddressProof</div>` : ''}
-    ${list.StatusEmirateId ? `<div class="docLink" hashValue=${list.EmirateId} dmcc_id=${list.DmccId_certs??list.DmccId}>EmirateId</div>` : ''}
-    ${list.StatusBussinessProfile ? `<div class="docLink" hashValue=${list.BussinessProfile} dmcc_id=${list.DmccId_certs??list.DmccId}>BussinessProfile</div>` : ''}
-    ${list.StatusIncorporationOfSubsidaryInDmcc ? `<div class="docLink" hashValue=${list.IncorporationOfSubsidaryInDmcc} dmcc_id=${list.DmccId_certs??list.DmccId}>IncorporationOfSubsidaryInDmcc</div>` : ''}
+        ${!list.StatusDeclerationOfUltimateBenefitialOwners ? `<div class="docLink" hashValue=${list.DeclerationOfUltimateBenefitialOwners} dmcc_id=${list.DmccId_certs??list.DmccId}>DeclerationOfUlti mateBenefitialOwners</div>` : ''}
+        ${!list.StatusValidPassportCopy ? `<div class="docLink" hashValue=${list.ValidPassportCopy} dmcc_id=${list.DmccId_certs??list.DmccId}>ValidPassportCopy</div>` : ''}
+        ${!list.StatusUtilityBillForAddressProof ? `<div class="docLink" hashValue=${list.UtilityBillForAddressProof} dmcc_id=${list.DmccId_certs??list.DmccId}>UtilityBillForAddressProof</div>` : ''}
+        ${!list.StatusEmirateId ? `<div class="docLink" hashValue=${list.EmirateId} dmcc_id=${list.DmccId_certs??list.DmccId}>EmirateId</div>` : ''}
+        ${!list.StatusBussinessProfile ? `<div class="docLink" hashValue=${list.BussinessProfile} dmcc_id=${list.DmccId_certs??list.DmccId}>BussinessProfile</div>` : ''}
+        ${!list.StatusIncorporationOfSubsidaryInDmcc ? `<div class="docLink" hashValue=${list.IncorporationOfSubsidaryInDmcc} dmcc_id=${list.DmccId_certs??list.DmccId}>IncorporationOfSubsidaryInDmcc</div>` : ''}
+      </div>
+    </div>
     
   `
   ;
@@ -543,6 +551,8 @@ function displayDetail(list){
    // Create a button element
    var button = document.createElement("button");
    button.textContent = "Cancel";
+   button.classList="btn btn-danger"
+   button.style.margin="60px 0px 0px 1750px"
 
    button.onclick = handleCancel;
 

@@ -2,7 +2,7 @@ body{
     cursor: grab;
     background-color: black !important; 
     color: white !important;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .loading{
@@ -92,7 +92,7 @@ canvas{
     position: absolute;
     z-index: 2;
     padding: 10px 20px;
-    width: 80vw;
+    width: 100vw;
     margin: auto;
 
     .docLink{
@@ -137,3 +137,32 @@ canvas{
     font-weight: 400;
 }
 
+.eachDetail{
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 48px;
+    color:  #525252;
+  }
+  
+  .eachDetailAnswer{
+    color: #0A917C;
+  }
+
+  .displayHeader{
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 52.5px;
+    margin-bottom: 20px;
+  }
+
+  .title{
+    font-weight: 800;
+    font-size: 46px;
+    line-height: 69px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+
+  

@@ -10,7 +10,7 @@ const changeLoading=(value)=>{
     loading=value;
 }
 
-var userType=null, inputing=false, showingDetail=true, moveCharacter=false;
+var userType=null, inputing=false, showingDetail=true, moveCharacter=false,outside=true;
 
 const updateUserType=(value)=>{
     userType=value;
@@ -99,6 +99,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
           }
   
           this.mixer.update( delta )
+
   
   
           // Walk Velocity
@@ -107,7 +108,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
              // move model
             const moveX =  velocity * delta
             const moveZ = velocity * delta
-            // console.log(this.model.position.x, this.model.position.z);
+            console.log(this.model.position.x, this.model.position.z);
             if(moveCharacter){
               if(keysPressed['w']){
               
@@ -251,7 +252,18 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
                 document.querySelector('.input').replaceChildren(newForm);
               }
             }
-  
+
+            //get into main building
+            if(!loading){
+              if((this.model.position.x>3370 && this.model.position.x<3415)&&(this.model.position.z>11680 && this.model.position.z<11710) ){
+                this.model.position.z-=500;
+              }
+              if((this.model.position.x>3370 && this.model.position.x<3415)&&(this.model.position.z>11370 && this.model.position.z<11400) ){
+                this.model.position.z+=500;
+              }
+
+            }
+            
             //move to reception page
             if(!loading && !sessionStorage.getItem('companyId') ){
               if((this.model.position.x>4100 && this.model.position.x<4150)&&(this.model.position.z>10600 && this.model.position.z<10700) ){

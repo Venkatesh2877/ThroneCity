@@ -42,69 +42,69 @@ const registerCompanyFormHTML=`
     </div>
 
     <div class="inputContainer">
-      <label for="FinancialYearOfTheComapny">Financial Year Of The Comapny:</label>
+      <label for="Financial Year Of The Comapny">Financial Year Of The Comapny:</label>
       <input type="text" id="FinancialYearOfTheComapny" name="FinancialYearOfTheComapny" >
     </div>
 
     <div class="inputContainer">
-      <label for="ProposedBankOfTheCompany">Proposed Bank Of The Company:</label>
+      <label for="Proposed Bank Of The Company">Proposed Bank Of The Company:</label>
       <input type="text" id="ProposedBankOfTheCompany" name="ProposedBankOfTheCompany" >
     </div>
 
     <div class="inputContainer">
-      <label for="ActivitiesOfTheDmccCompany">ActivitiesOfTheDmccCompany:</label>
+      <label for="Activities Of The Dmcc Company">Activities Of The Dmcc Company:</label>
       <input type="text" id="ActivitiesOfTheDmccCompany" name="ActivitiesOfTheDmccCompany" >
     </div>
 
     <div class="inputContainer">
-      <label for="FacilityOfTheDmccCompany">FacilityOfTheDmccCompany:</label>
+      <label for="Facility Of The Dmcc Company">Facility Of The Dmcc Company:</label>
       <input type="text" id="FacilityOfTheDmccCompany" name="FacilityOfTheDmccCompany" >
     </div>
 
     <div class="inputContainer">
-      <label for="LegalStatusOfTheCompany">LegalStatusOfTheCompany:</label>
+      <label for="Legal Status Of The Company">Legal Status Of The Company:</label>
       <input type="text" id="LegalStatusOfTheCompany" name="LegalStatusOfTheCompany" >
     </div>
 
     <div class="inputContainer">
-      <label for="NameOfTheShareHolder">NameOfTheShareHolder:</label>
+      <label for="Name Of The ShareHolder">Name Of The Share Holder:</label>
       <input type="text" id="NameOfTheShareHolder" name="NameOfTheShareHolder" >
     </div>
   </div>
 
   <div>
     <div class="inputContainer">
-      <label for="ShareCapital">ShareCapital:</label>
+      <label for="Share Capital">Share Capital:</label>
       <input type="text" id="ShareCapital" name="ShareCapital" >
     </div>
 
     <div class="inputContainer">
-      <label for="ShareHoldingPercentage">ShareHoldingPercentage:</label>
+      <label for="Share Holding Percentage">Share Holding Percentage:</label>
       <input type="text" id="ShareHoldingPercentage" name="ShareHoldingPercentage" >
     </div>
 
     <div class="inputContainer">
-      <label for="SelectRoleOfTheCompany">SelectRoleOfTheCompany:</label>
+      <label for="Select Role Of The Company">Select Role Of The Company:</label>
       <input type="text" id="SelectRoleOfTheCompany" name="SelectRoleOfTheCompany" >
     </div>
 
     <div class="inputContainer">
-      <label for="EmiratesId">EmiratesId:</label>
+      <label for="EmiratesId">Emirates Id:</label>
       <input type="text" id="EmiratesId" name="EmiratesId" >
     </div>
 
     <div class="inputContainer">
-      <label for="OfficialMailAddress">OfficialMailAddress:</label>
+      <label for="Official Mail Address">Official Mail Address:</label>
       <input type="text" id="OfficialMailAddress" name="OfficialMailAddress" >
     </div>
 
     <div class="inputContainer">
-      <label for="ContactNumber">ContactNumber:</label>
+      <label for="Contact Number">Contact Number:</label>
       <input type="text" id="ContactNumber" name="ContactNumber" >
     </div>
 
     <div class="inputContainer">
-      <label for="AdditionalDetails">AdditionalDetails:</label>
+      <label for="Additional Details">Additional Details:</label>
       <input type="text" id="AdditionalDetails" name="AdditionalDetails" >
     </div>
   </div>
@@ -114,36 +114,36 @@ const registerCompanyFormHTML=`
       <label for="Incorporation">Incorporation:</label>
       <input type="file" id="Incorporation" name="Incorporation" >
 
-      <label for="MoaAndAoa">MoaAndAoa:</label>
+      <label for="MoaAndAoa">Moa And Aoa:</label>
       <input type="file" id="MoaAndAoa" name="MoaAndAoa" >
 
       <label for="Incumberency">Incumberency:</label>
       <input type="file" id="Incumberency" name="Incumberency" >
 
-      <label for="UndertakingLetterOfShareCapital">UndertakingLetterOfShareCapital:</label>
+      <label for="Undertaking Letter Of Share Capital">Undertaking Letter Of Share Capital:</label>
       <input type="file" id="UndertakingLetterOfShareCapital" name="UndertakingLetterOfShareCapital" >
 
-      <label for="AuthorizationLetter">AuthorizationLetter:</label>
+      <label for="AuthorizationLetter">Authorization Letter:</label>
       <input type="file" id="AuthorizationLetter" name="AuthorizationLetter" >
 
-      <label for="DeclerationOfUltimateBenefitialOwners">DeclerationOfUltimateBenefitialOwners:</label>
+      <label for="Decleration Of Ultimate Benefitial Owners">Decleration Of Ultimate Benefitial Owners:</label>
       <input type="file" id="DeclerationOfUltimateBenefitialOwners" name="DeclerationOfUltimateBenefitialOwners" >
 
-      <label for="ValidPassportCopy">ValidPassportCopy:</label>
+      <label for="ValidPassportCopy">Valid Passport Copy:</label>
       <input type="file" id="ValidPassportCopy" name="ValidPassportCopy" >
 
-      <label for="UtilityBillForAddressProof">UtilityBillForAddressProof:</label>
+      <label for="Utility Bill For Address Proof">Utility Bill For Address Proof:</label>
       <input type="file" id="UtilityBillForAddressProof" name="UtilityBillForAddressProof" >
   </div>
 
   <div>
-      <label for="EmirateId">EmirateId:</label>
+      <label for="EmirateId">Emirate Id:</label>
       <input type="file" id="EmirateId" name="EmirateId" >
 
-      <label for="BussinessProfile">BussinessProfile:</label>
+      <label for="BussinessProfile">Bussiness Profile:</label>
       <input type="file" id="BussinessProfile" name="BussinessProfile" >
 
-      <label for="IncorporationOfSubsidaryInDmcc">IncorporationOfSubsidaryInDmcc:</label>
+      <label for="IncorporationOfSubsidaryInDmcc">Incorporation Of Subsidary In Dmcc:</label>
       <input type="file" id="IncorporationOfSubsidaryInDmcc" name="IncorporationOfSubsidaryInDmcc" >
 
   </div>
@@ -151,5 +151,7 @@ const registerCompanyFormHTML=`
 
 <button type="submit" class="btn btn-primary" style="margin:auto;">Submit</button>
 `;
+
+
 
 export  {newUserFormHTML,clientUserFormHTML,registerCompanyFormHTML};

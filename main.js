@@ -54,6 +54,7 @@ scene.add(floorPlane);
 scene.add(roofPlane);
 
 
+
 // CONTROLS
 var orbitControls = new OrbitControls(camera, renderer.domElement);
 // orbitControls.enableDamping = true;
@@ -89,7 +90,7 @@ userTypeElements.forEach(function (element) {
 });
 
 
-var characterControl;
+var characterControl, marker;
 
 function LoadModel(){
 
@@ -178,7 +179,7 @@ function LoadModel(){
           }
       })
 
-      // model.position.set(3400, -112, 13600);
+      // model.position.set(3400, -112, 12600);
       model.position.set(3400,-112,10400);
       model.scale.set(0.4, 0.4, 0.4);
       model.rotation.y = THREE.MathUtils.degToRad(-180);
@@ -369,49 +370,89 @@ function LoadModel(){
     })
   })
 
-  // //chair table
-  // loader.load("./src/table_and_chairs.glb",(gltf)=>{
-  //   const model=gltf.scene;
-  //   model.traverse((object)=>{
-  //     if(object.isMesh){
-  //       object.castShadow=true;
-  //     }
-  //     for (let i = 0  ; i < 3; i++) {        
-  //       const clonedModel = gltf.scene.clone();
-  //       // clonedModel.position.set( 2650,-112, 10690-(i*300));
-  //       clonedModel.position.set( 2950,-112, 10740-(i*200));
-  //       clonedModel.scale.set(1.7,1.7,1.7)
-  //       scene.add(clonedModel);
-  //     }
-  //   })
-  // })
+  //load marker
+  loader.load("./src/3d_lowpoly_arrow.glb",(gltf)=>{
 
-  // loader.load("./src/table_and_chair_4.glb",(gltf)=>{
-  //   const model=gltf.scene;
-  //   model.traverse((object)=>{
-  //     if(object.isMesh){
-  //       object.castShadow=true;
-  //     }
-  //     for (let i = 0  ; i < 2; i++) {        
-  //       const clonedModel = gltf.scene.clone();
-  //       clonedModel.position.set( 2650,-112, 10740-(i*400));
-  //       clonedModel.scale.set(50.7,50.7,50.7)
-  //       scene.add(clonedModel);
-  //     }
-  //   })
-  // })
+    const model1 = gltf.scene.clone();
+    model1.traverse((object) => {
+        if (object.isMesh) {
+            object.castShadow = true;
+        }
+    });
+    model1.position.set(3400, -111, 11700);
+    model1.scale.set(3000, 3000, 3000);
+    model1.rotation.y = THREE.MathUtils.degToRad(-90);
+    scene.add(model1);
+
+    // Second instance
+    const model2 = gltf.scene.clone();
+    model2.traverse((object) => {
+        if (object.isMesh) {
+            object.castShadow = true;
+        }
+    });
+    model2.position.set(3400, -111, 11390);
+    model2.scale.set(3000, 3000, 3000);
+    model2.rotation.y = THREE.MathUtils.degToRad(-90);
+    scene.add(model2);
+  })
 
 }
 
 
 
+export function lobbyCharacter(body) {
+  console.log("function calling");
 
+  const mixers = []; // Array to store individual animation mixers
 
+  for (let i = 0; i < body.length; i++) {
+    const loader = new GLTFLoader();
 
+    loader.load("./src/carla_-_sitting_idle.glb", (gltf) => {
+      const model = gltf.scene;
+      console.log("loading char");
+      model.traverse((c) => {
+        if (c.isMesh) {
+          c.castShadow = true;
+        }
+      });
 
+      model.position.set((i * 350) + 2700, -112, 10740);
+      model.scale.set(18, 18, 18);
+      console.log(gltf.animations);
 
+      // Animation
+      const animations = gltf.animations;
+      if (animations && animations.length > 0) {
+        const mixer = new THREE.AnimationMixer(model);
+        const animationClip = animations[0];
+        const animationAction = mixer.clipAction(animationClip);
 
-// CONTROL KEYS
+        // Play the animation
+        animationAction.play();
+
+        mixers.push(mixer); // Store the mixer in the array
+      }
+
+      scene.add(model);
+    });
+  }
+
+  // Animation Loop (Outside the loader callback)
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Update each animation mixer
+    for (const mixer of mixers) {
+      mixer.update(clock.getDelta());
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+}
 
 var keypressed = {}
 
@@ -460,7 +501,12 @@ function RAF(){
     {
       characterControl.update(mixerUpdateDelta, keypressed);
     }
-  
+ 
+    // marker.rotation.y += 0.01;
+
+    // // Move the model up and down in the y-axis
+    // marker.position.y = Math.sin(Date.now() * 0.001) * 500 + 11700;
+
     orbitControls.update();
     renderer.render(scene,camera);
     RAF();

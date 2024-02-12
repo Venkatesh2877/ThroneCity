@@ -3,12 +3,30 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { camera, light, amblight } from "./cameraSceneLight.js";
 import {floorPlane,roofPlane } from './floor.js'
-import {CharacterControls,loading,changeLoading, userType,updateUserType, inputing,updateInputing} from './characterControls.js'
+import {CharacterControls,loading,changeLoading, userType,updateUserType, inputing,updateInputing,updateMovement} from './characterControls.js'
 import { handleFormSubmission } from "./functions.js"
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import {FontLoader} from 'three/examples/jsm/loaders/FontLoader';
 import {TextGeometry} from 'three/examples/jsm/geometries/TextGeometry';
 import { degToRad } from "three/src/math/MathUtils.js";
+
+
+//registration page
+const question = document.querySelector(".displayQuestions");
+const answer = document.querySelector(".displayAnswer");
+
+const micOn = document.querySelector(".micOn");
+const micOff = document.querySelector(".micOff");
+const inputArrow = document.querySelector(".inputArrow");
+const inputContainer= document.querySelector(".inputContainerRes");
+const inputBox = document.querySelector(".inputBox");
+const detailForm = document.querySelector(".detailForm");
+
+const details = document.querySelector(".details");
+const detailsPdf = document.querySelector(".detailsPdf");
+const eclipse = document.querySelector(".eclipse");
+const wave = document.querySelector(".wave");
+
 
 
 
@@ -518,3 +536,149 @@ const axesHelper = new THREE.AxesHelper(5);
 axesHelper.position.set(3400, -112, 13800);
 scene.add(axesHelper);
 
+
+
+
+
+
+
+
+const Username = "Venkatesh";
+
+const inputs = [
+  {question:"Company Name", name:"companyName",answered:false},
+  {question:"Financial Year Of The Company",name:"FinancialYearOfTheCompany",answered:false},
+  {question:"Proposed Bank Of The Company",name:"ProposedBankOfTheCompany",answered:false},
+  {question:"Activities Of The Company",name:"ActivitiesOfTheDmccCompany",answered:false},
+  {question:"Facility Of The Company",name:"FacilityOfTheDmccCompany",answered:false},
+  {question:"Legal Status Of The Company",name:"LegalStatusOfTheCompany",answered:false},
+  {question:"Share Capital",name:"ShareCapital",answered:false},
+  {question:"Name Of The Share Holder",name:"NameOfTheShareHolder",answered:false},
+  {question:"Select Role Of The Company",name:"SelectRoleOfTheCompany",answered:false},
+  {question:"Emirates I D",name:"EmiratesId",answered:false},
+  {question:"Share Holding Percentage",name:"ShareHoldingPercentage",answered:false},
+  {question:"Official Mail Address",name:"OfficialMailAddress",answered:false},
+  {question:"Contact Number",name:"ContactNumber",answered:false},
+  {question:"Additional Details",name:"AdditionalDetails",answered:false}
+];
+var result = {};
+
+if ("speechSynthesis" in window) {
+  console.log("Web Speech API supported!");
+} else {
+  console.log("Web Speech API not supported :-(");
+}
+
+function speak(sentence) {
+  const text_speak = new SpeechSynthesisUtterance(sentence);
+
+  text_speak.rate = 1;
+  text_speak.pitch = 1;
+
+  window.speechSynthesis.speak(text_speak);
+  return true;
+}
+
+function wishMe() {
+  var day = new Date();
+  var hr = day.getHours();
+
+  if (hr >= 0 && hr < 12) {
+    speak("Good morning");
+  } else if (hr >= 12 && hr < 17) {
+    speak("Good Afternoon");
+    console.log("Good Afternoon");
+  } else {
+    speak("Good evening");
+  }
+}
+
+export function loadRegistartion(){
+  speak(`Hello, ${Username}`);
+  wishMe();
+  speakInput();
+};
+
+
+async function speakInput() {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SpeechGrammarList =
+    window.SpeechGrammarList || window.webkitSpeechGrammarList;
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+
+  for (const input of inputs) {
+    speak(`Please share the ${input.question}`);
+    question.textContent = `Please share the ${input.question}`;
+
+    await new Promise((resolve) => {
+
+      
+      inputContainer.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        if(!input.answered){
+          input.answered=true;
+             // details.innerHTML += `<div class="eachDetail">${input}&nbsp:&nbsp<span class="eachDetailAnswer">${inputBox.value}</span></div>`;
+          details.innerHTML+=`<div class="eachDetailReg"><label for=${input.name} >${input.question}&nbsp:&nbsp</label>
+          <input type="text" id=${input.name} name=${input.name} value=${inputBox.value}></div>`
+          inputBox.value = "";
+          resolve();
+        }
+      });
+  
+
+
+      micOn.addEventListener("click", () => {
+        // Handle mic activation
+        micOff.style.display = "block";
+        micOn.style.display = "none";
+        eclipse.style.display='none';
+        wave.style.display='block';
+        recognition.start();
+      });
+
+      micOff.addEventListener("click", () => {
+        // Handle mic deactivation
+        micOff.style.display = "none";
+        micOn.style.display = "block";
+        eclipse.style.display='block';
+        wave.style.display='none';
+        recognition.stop();
+      });
+
+      recognition.onresult = (event) => {
+        // Handle speech recognition result
+        const current = event.resultIndex;
+        const transcript = event.results[current][0].transcript;
+        result[input] = transcript;
+        input.answered=true;
+        // details.innerHTML += `<div class="eachDetail">${input}&nbsp:&nbsp<span class="eachDetailAnswer">${transcript}</span></div>`;
+        details.innerHTML+=`<div><label for=${input.name} class="eachDetail">${input.question}&nbsp:&nbsp</label>
+          <input type="text" id=${input.name} name=${input.name} value=${transcript}> </div>`
+        resolve();
+      };
+
+      recognition.onerror = (event) => {
+        // Handle speech recognition errors
+        speak("Sorry, I didn't get that. Please try again.");
+        console.error("Speech recognition error:", event.error);
+      };
+    });
+  }
+
+  speak("Thank you and upload all the required documents");
+  question.textContent = "Thank you and upload all the required documents";
+  detailsPdf.style.display = "block";
+}
+
+
+detailForm.addEventListener("submit",(e)=>{
+  e.preventDefault();
+  console.log(e.target.elements);
+  canvas.style.opacity=1;
+  document.querySelector('.registeration').style.display='none';
+  updateMovement(true);
+  handleFormSubmission(e);
+})

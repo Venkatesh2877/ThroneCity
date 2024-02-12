@@ -365,7 +365,7 @@ async function handleFormSubmission(event) {
   canvas.style.opacity = "1";
   document.querySelector(".input").style.display = "none";
   updateMovement(true);
-
+    
   if (event.target.elements.Company) {
     sessionStorage.setItem("companyId", event.target.Company.value);
     sessionStorage.removeItem("username");

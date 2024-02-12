@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import {newUserFormHTML, clientUserFormHTML, registerCompanyFormHTML} from './inputForm.js';
-import { canvas,scene } from "./main.js";
+import { canvas,scene,loadRegistartion } from "./main.js";
 import { list,displayDetail, newList} from "./functions.js";
 
 const DIRECTIONS = ['w', 'a', 's', 'd'];
@@ -108,7 +108,7 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
              // move model
             const moveX =  velocity * delta
             const moveZ = velocity * delta
-            console.log(this.model.position.x, this.model.position.z);
+            // console.log(this.model.position.x, this.model.position.z);
             if(moveCharacter){
               if(keysPressed['w']){
               
@@ -269,24 +269,8 @@ var CharacterControls = /** @class */( function () { // ES6 standard way of crea
               if((this.model.position.x>4100 && this.model.position.x<4150)&&(this.model.position.z>10600 && this.model.position.z<10700) ){
                 updateMovement(false);
                 canvas.style.opacity="0.2";
-                document.querySelector('.input').style.display='block';
-                var newForm = document.createElement("form");
-                newForm.id = "myForm"; 
-  
-                // Add new content to the form
-                newForm.innerHTML = registerCompanyFormHTML;
-                document.querySelector('.input').replaceChildren(newForm);
-                
-                  // Create a button element
-                var button = document.createElement("div");
-                button.innerHTML = "Cancel";
-                button.classList="btn btn-danger";
-                button.style.width="270px"
-
-                button.onclick = handleCancel;
-
-                // Append the button to the div
-                document.getElementById('myForm').appendChild(button);
+                document.querySelector('.registeration').style.display='block';
+                loadRegistartion();
                 this.model.position.x-=10;
               }
             }

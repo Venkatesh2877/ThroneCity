@@ -189,7 +189,6 @@ function addNewCompany(certBody, detailBody) {
     });
 }
 
-//function to load lobby
 // function loadLobby(body){
 //     const loader = new GLTFLoader();
 //     console.log(body);
@@ -317,11 +316,13 @@ function loadLobby(body) {
   console.log(body);
   // Load the 3D model
   loader.load("./src/office_cabin.glb", (gltf) => {
+  // loader.load("./src/human_working.glb", (gltf) => {
     gltf.scene.traverse((c) => {
       c.castShadow = true;
     });
 
     for (let i = 0; i < body.length; i++) {
+      console.log("lobby",i);
       const clonedModel = gltf.scene.clone();
       clonedModel.position.set(i * 350 + 2700, -112, 9040);
       clonedModel.scale.set(30, 40, 40);
@@ -356,7 +357,7 @@ function loadLobby(body) {
     }
   });
 
-  // lobbyCharacter(body);
+  lobbyCharacter(body);
 }
 
 // Function to handle form submission
@@ -365,7 +366,7 @@ async function handleFormSubmission(event) {
   canvas.style.opacity = "1";
   document.querySelector(".input").style.display = "none";
   updateMovement(true);
-    
+
   if (event.target.elements.Company) {
     sessionStorage.setItem("companyId", event.target.Company.value);
     sessionStorage.removeItem("username");
@@ -416,50 +417,52 @@ async function handleFormSubmission(event) {
   } else if (event.target.elements.companyName) {
     console.log("register company", event.target.elements);
     var newCompanyDetails = {
-      username: sessionStorage.getItem("username"),
-      CompanyName: event.target.elements.companyName.value,
+      username: sessionStorage?.getItem("username"),
+      CompanyName: event.target?.elements?.companyName?.value,
       // DmccId: `dmcc-${event.target.elements.DmccId.value}`,
+      DmccId: `dmcc-1111`,
       FinancialYearOfTheComapny:
-        event.target.elements.FinancialYearOfTheComapny.value,
+        event.target.elements?.FinancialYearOfTheComapny?.value,
       ProposedBankOfTheCompany:
-        event.target.elements.ProposedBankOfTheCompany.value,
+        event.target.elements?.ProposedBankOfTheCompany?.value,
       ActivitiesOfTheDmccCompany:
-        event.target.elements.ActivitiesOfTheDmccCompany.value,
+        event.target.elements?.ActivitiesOfTheDmccCompany?.value,
       FacilityOfTheDmccCompany:
-        event.target.elements.FacilityOfTheDmccCompany.value,
+        event.target.elements?.FacilityOfTheDmccCompany?.value,
       LegalStatusOfTheCompany:
-        event.target.elements.LegalStatusOfTheCompany.value,
-      NameOfTheShareHolder: event.target.elements.NameOfTheShareHolder.value,
-      ShareCapital: event.target.elements.ShareCapital.value,
+        event.target.elements?.LegalStatusOfTheCompany?.value,
+      NameOfTheShareHolder: event.target.elements?.NameOfTheShareHolder?.value,
+      ShareCapital: event.target.elements?.ShareCapital?.value,
       ShareHoldingPercentage:
-        event.target.elements.ShareHoldingPercentage.value,
+        event.target.elements?.ShareHoldingPercentage?.value,
       SelectRoleOfTheCompany:
-        event.target.elements.SelectRoleOfTheCompany.value,
-      EmiratesId: event.target.elements.EmiratesId.value,
-      OfficialMailAddress: event.target.elements.OfficialMailAddress.value,
-      ContactNumber: event.target.elements.ContactNumber.value,
-      AdditionalDetails: event.target.elements.AdditionalDetails.value,
+        event.target.elements?.SelectRoleOfTheCompany?.value,
+      EmiratesId: event.target?.elements.EmiratesId?.value,
+      OfficialMailAddress: event.target.elements?.OfficialMailAddress?.value,
+      ContactNumber: event.target.elements?.ContactNumber?.value,
+      AdditionalDetails: event.target.elements?.AdditionalDetails?.value,
     };
 
     var newCompanyDoc = {
-      Incorporation: event.target.elements.Incorporation.value,
-      MoaAndAoa: event.target.elements.MoaAndAoa.value,
-      Incumberency: event.target.elements.Incumberency.value,
+      Incorporation: event.target.elements?.Incorporation?.value,
+      MoaAndAoa: event.target.elements?.MoaAndAoa?.value,
+      Incumberency: event.target.elements?.Incumberency?.value,
       UndertakingLetterOfShareCapital:
-        event.target.elements.UndertakingLetterOfShareCapital.value,
-      AuthorizationLetter: event.target.elements.AuthorizationLetter.value,
+        event.target.elements?.UndertakingLetterOfShareCapital?.value,
+      AuthorizationLetter: event.target.elements?.AuthorizationLetter?.value,
       DeclerationOfUltimateBenefitialOwners:
-        event.target.elements.DeclerationOfUltimateBenefitialOwners.value,
-      ValidPassportCopy: event.target.elements.ValidPassportCopy.value,
+        event.target.elements?.DeclerationOfUltimateBenefitialOwners?.value,
+      ValidPassportCopy: event.target.elements?.ValidPassportCopy?.value,
       UtilityBillForAddressProof:
-        event.target.elements.UtilityBillForAddressProof.value,
-      EmirateId: event.target.elements.EmirateId.value,
-      BussinessProfile: event.target.elements.BussinessProfile.value,
+        event.target.elements?.UtilityBillForAddressProof?.value,
+      EmirateId: event.target.elements?.EmirateId?.value,
+      BussinessProfile: event.target.elements?.BussinessProfile?.value,
       IncorporationOfSubsidaryInDmcc:
-        event.target.elements.IncorporationOfSubsidaryInDmcc.value,
+        event.target.elements?.IncorporationOfSubsidaryInDmcc?.value,
       data: {
-        username: sessionStorage.getItem("username"),
-        DmccId_certs: `dmcc-${event.target.elements.DmccId.value - 10}`,
+        username: sessionStorage?.getItem("username"),
+        // DmccId_certs: `dmcc-${event.target.elements.DmccId.value - 10}`,
+        DmccId_certs: `dmcc-1211`,
         StatusIncorporation: Incorporation ? true : false,
         StatusMoaAndAoa: MoaAndAoa ? true : false,
         StatusIncumberency: Incumberency ? true : false,
@@ -538,7 +541,7 @@ function displayDetail(list) {
   companyListElement.innerHTML = `
     <div class="title" style="margin-bottom:20px">
       <span style="padding: 5px;">Rak</span>
-      <span style="height: 60px;"><img src="/src/res/rakdao.gif" alt="logo" width="50px" height="80px" style="padding: 0px;"></span>
+      <span style="height: 8vh;"><img src="/src/res/rakdao.gif" alt="logo" width="100%" height="100%" style="padding: 0px;"></span>
       <span style="padding: 5px;">Dao</span>
     </div>
 
@@ -695,7 +698,7 @@ function displayDetail(list) {
   var button = document.createElement("button");
   button.textContent = "Cancel";
   button.classList = "btn btn-danger";
-  button.style.margin = "60px 0px 0px 1750px";
+  button.style.margin = "-20px 0px 0px 1750px";
 
   button.onclick = handleCancel;
 

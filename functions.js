@@ -10,75 +10,51 @@ import axios from "axios";
 var formData = new FormData();
 export var list = [
   {
-    companyName: "SimplyFi",
+    CompanyName: "SimplyFi",
     logo: "",
-    id: "company0001",
-    bankName: "Bank of America",
-    legalStatus: "Legal",
-    shareHolderName: "Vishwa",
-    roleInCompany: "CTO",
-    CertificateOfRegistration: "./src/assets/Certificate of registration.pdf",
-    ESTABLISHMENTCARDMempac: "./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf",
-    MempacLicenseCertificate:
+    DmccId: "company0001",
+    FinancialYearOfTheComapny:"2024",
+    ProposedBankOfTheCompany: "Bank of America",
+    ActivitiesOfTheDmccCompany:"Tech",
+    LegalStatusOfTheCompany: "Legal",
+    FacilityOfTheDmccCompany:'Bangalore',
+    ShareCapital: 100000,
+    NameOfTheShareHolder: "Vishwa",
+    SelectRoleOfTheCompany: "CTO",
+    EmiratesId:'DC20',
+    ShareHoldingPercentage:"20%",
+    Incorporation: "./src/assets/Certificate of registration.pdf",
+    Incumberency: "./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf",
+    StatusUndertakingLetterOfShareCapital:
       "./src/assets/Mempac License Certificate 2020.pdf",
-    SHARECERTIFICATE: "./src/assets/SHARE CERTIFICATE.pdf",
-    MempacELicenseCertificate:
+      StatusIncorporationOfSubsidaryInDmcc: "./src/assets/SHARE CERTIFICATE.pdf",
+      StatusBussinessProfile:
       "./src/assets/Mempac -E-License certificate0.pdf",
-    MOA: "/src/assets/MOA.pdf",
+      MoaAndAoa: "/src/assets/MOA.pdf",
   },
 
   {
-    companyName: "Google",
+    CompanyName: "Google",
     logo: "",
-    id: "company0002",
-    bankName: "SBI",
-    legalStatus: "Illegal",
-    shareHolderName: "Karthick",
-    roleInCompany: "Associate",
-    CertificateOfRegistration: "./src/assets/Certificate of registration.pdf",
-    ESTABLISHMENTCARDMempac: "./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf",
-    MempacLicenseCertificate:
+    DmccId: "company0002",
+    FinancialYearOfTheComapny:"2024",
+    ProposedBankOfTheCompany: "SBI",
+    ActivitiesOfTheDmccCompany:"Tech",
+    LegalStatusOfTheCompany: "Legal",
+    FacilityOfTheDmccCompany:"Bangalore",
+    ShareCapital: 100000,
+    NameOfTheShareHolder: "Karthick",
+    SelectRoleOfTheCompany: "Associate",
+    EmiratesId:"DC21",
+    ShareHoldingPercentage:"20%",
+    Incorporation: "./src/assets/Certificate of registration.pdf",
+    Incumberency: "./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf",
+    StatusUndertakingLetterOfShareCapital:
       "./src/assets/Mempac License Certificate 2020.pdf",
-    SHARECERTIFICATE: "./src/assets/SHARE CERTIFICATE.pdf",
-    MempacELicenseCertificate:
+      StatusIncorporationOfSubsidaryInDmcc: "./src/assets/SHARE CERTIFICATE.pdf",
+      StatusBussinessProfile:
       "./src/assets/Mempac -E-License certificate0.pdf",
-    MOA: "/src/assets/MOA.pdf",
-  },
-
-  {
-    companyName: "ITC",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/ITC_Limited_Logo.svg/983px-ITC_Limited_Logo.svg.png",
-    id: "company0003",
-    bankName: "Bank of Baroda",
-    legalStatus: "Illegal",
-    shareHolderName: "Ali",
-    roleInCompany: "Manager",
-    CertificateOfRegistration: "./src/assets/Certificate of registration.pdf",
-    ESTABLISHMENTCARDMempac: "./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf",
-    MempacLicenseCertificate:
-      "./src/assets/Mempac License Certificate 2020.pdf",
-    SHARECERTIFICATE: "./src/assets/SHARE CERTIFICATE.pdf",
-    MempacELicenseCertificate:
-      "./src/assets/Mempac -E-License certificate0.pdf",
-    MOA: "/src/assets/MOA.pdf",
-  },
-
-  {
-    companyName: "Honda",
-    logo: "https://w7.pngwing.com/pngs/540/52/png-transparent-honda-logo-car-honda-integra-toyota-honda-angle-text-rectangle.png",
-    id: "company0004",
-    bankName: "Canada Bank",
-    legalStatus: "Legal",
-    shareHolderName: "Vishnu",
-    roleInCompany: "CTO",
-    CertificateOfRegistration: "./src/assets/Certificate of registration.pdf",
-    ESTABLISHMENTCARDMempac: "./src/assets/ESTABLISHMENT CARD Mempac 2020.pdf",
-    MempacLicenseCertificate:
-      "./src/assets/Mempac License Certificate 2020.pdf",
-    SHARECERTIFICATE: "./src/assets/SHARE CERTIFICATE.pdf",
-    MempacELicenseCertificate:
-      "./src/assets/Mempac -E-License certificate0.pdf",
-    MOA: "/src/assets/MOA.pdf",
+      MoaAndAoa: "/src/assets/MOA.pdf",
   },
 ];
 
@@ -332,6 +308,7 @@ function loadLobby(body) {
       fontLoader.load(
         "node_modules/three/examples/fonts/droid/droid_sans_mono_regular.typeface.json",
         (droidFont) => {
+          // const textGeometry = new TextGeometry(body[i].CompanyName, {
           const textGeometry = new TextGeometry(body[i].CompanyName, {
             height: 2,
             size: 30,

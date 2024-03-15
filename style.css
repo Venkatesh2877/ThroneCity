@@ -139,7 +139,7 @@ canvas {
 }
 
 .eachDetail {
-  font-size: 28px;
+  font-size: 2rem;
   font-weight: 400;
   line-height: 48px;
   color: #525252;
@@ -150,16 +150,16 @@ canvas {
 }
 
 .displayHeader {
-  font-size: 30px;
+  font-size: 2.5rem;
   font-weight: 500;
   line-height: 52.5px;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .title {
   font-weight: 800;
-  font-size: 46px;
-  line-height: 69px;
+  font-size: 4.5rem;
+  /* line-height: 20px; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -188,7 +188,7 @@ canvas {
   align-items: center;
   justify-content: center;
   font-weight: 400;
-  font-size: 22px;
+  font-size: 2.2rem;
   line-height: 33px;
   color: #525252;
 }
@@ -197,6 +197,7 @@ canvas {
   display: flex;
   justify-content: space-around;
   width: 80%;
+  height:50%;
   margin: 20px auto;
 }
 
@@ -208,7 +209,7 @@ canvas {
 }
 
 .eachDetailReg label {
-  font-size: 23px;
+  font-size: 2.3rem;
   font-weight: 400;
   /* line-height: 48px; */
   color: #525252;
@@ -228,14 +229,14 @@ canvas {
 
 .details {
   overflow-y: scroll;
-  height: 530px;
+  height: 32rem;
   width: 600px;
   padding: 10px;
 }
 
 .detailsPdf {
   overflow-y: scroll;
-  height: 530px;
+  height: 32rem;
   width: 500px;
   padding: 10px;
   display: none;
@@ -244,7 +245,7 @@ canvas {
 .eachCertificate {
   display: flex;
   flex-direction: column;
-  font-size: 23px;
+  font-size: 2.3rem;
   font-weight: 300;
   line-height: 42px;
   background-color: #383838;
@@ -254,7 +255,7 @@ canvas {
 }
 
 .eachCertificate input {
-  font-size: 15px;
+  font-size: 1.5rem;
 }
 
 /* .eachCertificate{
@@ -276,7 +277,7 @@ border-radius: 10px;
   bottom: 18%;
   left: 50%;
   transform: translate(-50%, 0%);
-  font-size: 32px;
+  font-size: 2.5rem;
   font-weight: 400;
   line-height: 48px;
 }
@@ -309,7 +310,7 @@ border-radius: 10px;
   background-color: transparent;
   border: 1px #1f1f1f solid;
   color: white;
-  font-size: 22px;
+  font-size: 1.8rem;
 }
 
 .eachDetailReg input {
@@ -344,24 +345,27 @@ input:focus {
   display: none;
 }
 
+
 .eclipse {
   position: absolute;
-  width: 100%;
-  height: 415px;
+  width: 86.5%;
+  height: 200px;
   background-color: #1e1e1e;
   border-radius: 50%;
   background-image: radial-gradient(#727272, #1e1e1e);
-  bottom: -27%;
-  /* display: none; */
-  /* z-index: 1; */
+  bottom: 0%;
+  left: 50%;
+  transform: translateX(-50%) translateY(55%);
 }
+
+
 
 .submit {
   position: absolute;
   width: 150px;
   height: 40px;
-  bottom: 260px;
-  right: 150px;
+  bottom: 13%;
+  right: 10%;
   border-radius: 20px;
   background-color: #383838;
   color: white;
@@ -369,19 +373,22 @@ input:focus {
 }
 
 .wave svg {
-  width: 94%;
+  width: 96%;
   border-radius: 50%;
   overflow: hidden;
   transform: rotate(180deg);
   background-image: linear-gradient(to right, #e319b1, #50169b, #10d3db);
-  height: 310px;
+  height: 200px;
   border-radius: 50%;
   position: absolute;
 }
 
 .wave {
   position: absolute;
-  bottom: -17%;
+  width: 90%;
+  bottom: 0%;
+  left:50%;
+  transform: translateX(-50%) translateY(50%);
   display: none;
 }
 

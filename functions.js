@@ -1,13 +1,10 @@
-import { scene, canvas, lobbyCharacter } from "./main";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
-import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
-import { updateShowingDetail, updateMovement } from "./characterControls";
-import axios from "axios";
+import { updateMovement, updateShowingDetail } from "./characterControls";
+import { canvas, scene } from "./main";
 
-var formData = new FormData();
 export var list = [
   {
     CompanyName: "SimplyFi",
@@ -58,235 +55,84 @@ export var list = [
   },
 ];
 
-var dmcc_ids = ["Dmcc-1011", "Dmcc-1012"];
-var dmcc_ids = [1101, 1102];
+var dmcc_ids = ["Dmcc-1011"];
+
 export var newList = [];
 
 //function to make api call to get company details;
-async function getCompanyDetailAndDocument(username, dmcc_id) {
-  console.log(username, dmcc_id);
+async function getCompanyDetailAndDocument(username, password) {
+  console.log(username, password);
   let eachList = {};
+  let companies=[];
 
   //get the certificates hash values for each company
   let response = await fetch(
-    `http://20.25.46.73:8081/api/getCertificatesUploaded?username=${username}&dmccId_certs=dmcc-${dmcc_id}`,
+    `http://20.174.2.234:8084/api/login`,
     {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({username, password})
     }
   );
   let jsonData = await response.json();
-  eachList = { ...eachList, ...jsonData.data };
+  localStorage.setItem('username',jsonData?.data?.username);
+  localStorage.setItem('userId', jsonData?.data?._id);
+  localStorage.setItem('email',jsonData?.data?.email);
+  localStorage.setItem('coded_password',jsonData?.data?.coded_password);
+  localStorage.setItem('access_token',jsonData?.access_token);
+  
+ 
+
 
   response = await fetch(
-    `http://20.25.46.73:8081/api/getOnBoardingDetailsAndShareHolding?DmccId=dmcc-${
-      dmcc_id + 10
-    }&username=${username}`,
+    `http://20.174.2.234:8084/api/${localStorage.getItem('userId')}/get_all_added_companies`,
     {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization:"Bearer "+localStorage.getItem('access_token'),
       },
     }
   );
   jsonData = await response.json();
-  eachList = { ...eachList, ...jsonData.result };
+  console.log(jsonData);
+  jsonData?.data?.forEach((element) => {
+    console.log(element)
+    companies.push(element);
+  })
 
-  return eachList;
+  companies.map(async (element) => {
+    response = await fetch(
+      `http://20.174.2.234:8084/api/${localStorage.getItem('userId')}/company_documents/${element?._id}`,
+      
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:"Bearer "+localStorage.getItem('access_token'),
+        },
+      })
+      jsonData = await response.json();
+      element.documents=jsonData?.data
+  })
+
+  console.log(companies);
+  // eachList = { ...eachList, ...jsonData.result };
+
+  return companies;
 }
 
 //get the base64 from the hash value;
-function getBase64(username, dmcc_id, hashvalue) {
-  console.log(username, hashvalue, dmcc_id);
-  var b64;
-  axios({
-    method: "get",
-    url: `http://20.25.46.73:8081/api/getfile?docId=${hashvalue}&dmccId_certs=${dmcc_id}&username=${username}`,
-    // url:`http://20.25.46.73:8081/api/getfile?docId=QmUCVtEKaYnRfQ1YRtXkK6wAoKtFEuvUzbpgLRBFumcqEX&dmccId_certs=Dmcc-1011&username=Venkatesh`,
-  })
-    .then((response) => {
-      console.log(response?.data?.data?.file, "base64");
-      b64 = response?.data?.data?.file;
-      // var bin = atob(b64);
-
-      // Create a new window
-      var pdfWindow = window.open("", "_blank");
-
-      // Set the content of the new window with an embedded PDF object
-      pdfWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>PDF Viewer</title>
-        </head>
-        <body>
-          <object style="width: 100%; height: 842pt;" type="application/pdf" data="data:application/pdf;base64,${b64}"></object>
-        </body>
-        </html>
-      `);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+function getBase64( hashValue) {
+  console.log( hashValue);
+  const url = `https://gateway.pinata.cloud/ipfs/${hashValue}`;
+  window.open(url, '_blank');
 }
 
-//post the new company details
-function addNewCompany(certBody, detailBody) {
-  console.log("addNewCompany", certBody, detailBody);
-  axios({
-    method: "post",
-    url: `http://20.25.46.73:8081/api/putCertificatesUploaded`,
-    body: certBody,
-  })
-    .then((response) => {
-      console.log(response.data, "post cert");
-      files = response?.data?.datas;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
 
-  //get company details for each company
-  axios({
-    method: "post",
-    url: `http://20.25.46.73:8081/api/storeOnboardingCompanyAndShareHolding`,
-    body: detailBody,
-  })
-    .then((response) => {
-      console.log(response.data, "post detail");
-      files = response?.data?.data;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
-
-// function loadLobby(body){
-//     const loader = new GLTFLoader();
-//     console.log(body);
-//     // Load the 3D model
-//     loader.load("./src/office_cabin.glb",  (gltf)=> {
-//           gltf.scene.traverse(c=>{
-//             c.castShadow=true;
-//           });
-
-//       if(body.companyId){
-//         const company= list.find((each)=>each.id==body.companyId);
-//         if(company){
-//           gltf.scene.position.set(2700, -112, 9040);
-//           gltf.scene.scale.set(30,40,40);
-//           gltf.scene.rotation.y= THREE.MathUtils.degToRad(180);
-//           scene.add(gltf.scene);
-
-//           const fontLoader=new FontLoader();
-//           fontLoader.load(
-//             'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
-//             (droidFont)=>{
-//               const textGeometry= new TextGeometry(company.companyName,{
-//                 height:2,
-//                 size:30,
-//                 font:droidFont,
-//               });
-//               const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
-//               const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-//               textMesh.position.set(2530,55,9900);
-//               scene.add(textMesh);
-//             }
-//           )
-
-//           // Image
-//           const textureLoader = new THREE.TextureLoader();
-//           console.log(company.logo)
-//           const imageTexture = textureLoader.load(company.logo); // Set the path to your image
-//           const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
-//           const imageGeometry = new THREE.PlaneGeometry(50, 50); // Adjust the size as needed
-//           const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
-//           imageMesh.position.set(2500,75,9900); // Adjust the position as needed
-
-//           scene.add(imageMesh)
-//         }
-
-//       }else if(body.userName){
-//         //  Create multiple instances of the model
-//         for (let i = 0  ; i < list.length; i++) {
-//             const clonedModel = gltf.scene.clone();
-//             clonedModel.position.set((i * 350)+2700, -112, 9040);
-//             clonedModel.scale.set(30, 40, 40);
-//             clonedModel.rotation.y = THREE.MathUtils.degToRad(180);
-//             scene.add(clonedModel);
-//             const fontLoader=new FontLoader();
-//             fontLoader.load(
-//               'node_modules/three/examples/fonts/droid/droid_sans_mono_regular.typeface.json',
-//               (droidFont)=>{
-//                 const textGeometry= new TextGeometry(list[i].companyName,{
-//                   height:2,
-//                   size:30,
-//                   font:droidFont,
-//                 });
-//                 const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
-//                 const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-//                 textMesh.position.set((i*350)+2530,55,9900);
-//                 scene.add(textMesh);
-//               }
-//             )
-
-//                 // Image
-//             const textureLoader = new THREE.TextureLoader();
-//             console.log(list[i].logo)
-//             const imageTexture = textureLoader.load(list[i]?.logo); // Set the path to your image
-//             const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
-//             const imageGeometry = new THREE.PlaneGeometry(50, 50); // Adjust the size as needed
-//             const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
-//             imageMesh.position.set((i*350)+2500,75,9900); // Adjust the position as needed
-
-//             scene.add(imageMesh)
-//               }
-
-//       } else if(body.task){
-//         gltf.scene.position.set((350*(list.length-1))+2700, -112, 9040);
-//         gltf.scene.scale.set(30,40,40);
-//         gltf.scene.rotation.y= THREE.MathUtils.degToRad(180);
-//         scene.add(gltf.scene);
-
-//         const fontLoader=new FontLoader();
-//         fontLoader.load(
-//           'node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json',
-//           (droidFont)=>{
-//             const textGeometry= new TextGeometry(list[list.length-1].companyName,{
-//               height:2,
-//               size:30,
-//               font:droidFont,
-//             });
-//             const textMaterial=new THREE.MeshBasicMaterial({color:0xa6a6a6});
-//             const textMesh=new THREE.Mesh(textGeometry, textMaterial);
-//             textMesh.position.set((350*(list.length-1))+2530,55,9900);
-//             // textMesh.position.x=350;
-//             // textMesh.position.z=-120;
-//             scene.add(textMesh);
-//           }
-//         )
-
-//             // Image
-//             const textureLoader = new THREE.TextureLoader();
-//             const imageTexture = textureLoader.load(list[list.length-1].logo); // Set the path to your image
-//             const imageMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
-//             const imageGeometry = new THREE.PlaneGeometry(50, 50); // Adjust the size as needed
-//             const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
-//             imageMesh.position.set((350*(list.length-1))+2500,75,9900); // Adjust the position as needed
-
-//             scene.add(imageMesh)
-
-//       }
-//     });
-
-//   }
-
-// new lobby
-
+//load lobby
 function loadLobby(body) {
   const loader = new GLTFLoader();
   console.log(body);
@@ -301,7 +147,9 @@ function loadLobby(body) {
       console.log("lobby",i);
       const clonedModel = gltf.scene.clone();
       clonedModel.position.set(i * 350 + 2700, -112, 9040);
+      // clonedModel.position.set(i * 350 + 2700, -112, 12600);
       clonedModel.scale.set(30, 40, 40);
+      // clonedModel.scale.set(10, 10, 10);
       clonedModel.rotation.y = THREE.MathUtils.degToRad(180);
       scene.add(clonedModel);
       const fontLoader = new FontLoader();
@@ -309,7 +157,7 @@ function loadLobby(body) {
         "node_modules/three/examples/fonts/droid/droid_sans_mono_regular.typeface.json",
         (droidFont) => {
           // const textGeometry = new TextGeometry(body[i].CompanyName, {
-          const textGeometry = new TextGeometry(body[i].CompanyName, {
+          const textGeometry = new TextGeometry(body[i].company_name, {
             height: 2,
             size: 30,
             font: droidFont,
@@ -334,7 +182,7 @@ function loadLobby(body) {
     }
   });
 
-  lobbyCharacter(body);
+  // lobbyCharacter(body);
 }
 
 // Function to handle form submission
@@ -372,14 +220,15 @@ async function handleFormSubmission(event) {
         console.error("Error:", error);
       });
   } else if (event.target.elements.confirmPassword) {
-    //loadLobby({userName:event.target.username, password:event.target.password, confirmPassword:event.target.confirmPassword});
     sessionStorage.removeItem("username");
     sessionStorage.removeItem("companyId");
     const body = {
       username: event.target.username.value,
+      password:event.target.password.value,
+      email:event.target.email.value
     };
     const response = await fetch(
-      "http://20.25.46.73:8081/api/registerenrolluserdmcc",
+      "http://20.174.2.234:8084/api/signUp",
       {
         method: "POST",
         headers: {
@@ -390,87 +239,111 @@ async function handleFormSubmission(event) {
     );
     const jsonData = await response.json();
     console.log(event.target.username.value, jsonData);
-    dmcc_ids = [];
-  } else if (event.target.elements.companyName) {
-    console.log("register company", event.target.elements);
-    var newCompanyDetails = {
-      username: sessionStorage?.getItem("username"),
-      CompanyName: event.target?.elements?.companyName?.value,
-      // DmccId: `dmcc-${event.target.elements.DmccId.value}`,
-      DmccId: `dmcc-1111`,
-      FinancialYearOfTheComapny:
-        event.target.elements?.FinancialYearOfTheComapny?.value,
-      ProposedBankOfTheCompany:
-        event.target.elements?.ProposedBankOfTheCompany?.value,
-      ActivitiesOfTheDmccCompany:
-        event.target.elements?.ActivitiesOfTheDmccCompany?.value,
-      FacilityOfTheDmccCompany:
-        event.target.elements?.FacilityOfTheDmccCompany?.value,
-      LegalStatusOfTheCompany:
-        event.target.elements?.LegalStatusOfTheCompany?.value,
-      NameOfTheShareHolder: event.target.elements?.NameOfTheShareHolder?.value,
-      ShareCapital: event.target.elements?.ShareCapital?.value,
-      ShareHoldingPercentage:
-        event.target.elements?.ShareHoldingPercentage?.value,
-      SelectRoleOfTheCompany:
-        event.target.elements?.SelectRoleOfTheCompany?.value,
-      EmiratesId: event.target?.elements.EmiratesId?.value,
-      OfficialMailAddress: event.target.elements?.OfficialMailAddress?.value,
-      ContactNumber: event.target.elements?.ContactNumber?.value,
-      AdditionalDetails: event.target.elements?.AdditionalDetails?.value,
-    };
+    newList=[];
+  } else if (event.target.elements.company_name) {
+    // console.log(event)
+    // console.log("register company", event.target[14].files[0]);
+    // console.log("register company", event.target.elements?.shareHolder_name?.value);
 
-    var newCompanyDoc = {
-      Incorporation: event.target.elements?.Incorporation?.value,
-      MoaAndAoa: event.target.elements?.MoaAndAoa?.value,
-      Incumberency: event.target.elements?.Incumberency?.value,
-      UndertakingLetterOfShareCapital:
-        event.target.elements?.UndertakingLetterOfShareCapital?.value,
-      AuthorizationLetter: event.target.elements?.AuthorizationLetter?.value,
-      DeclerationOfUltimateBenefitialOwners:
-        event.target.elements?.DeclerationOfUltimateBenefitialOwners?.value,
-      ValidPassportCopy: event.target.elements?.ValidPassportCopy?.value,
-      UtilityBillForAddressProof:
-        event.target.elements?.UtilityBillForAddressProof?.value,
-      EmirateId: event.target.elements?.EmirateId?.value,
-      BussinessProfile: event.target.elements?.BussinessProfile?.value,
-      IncorporationOfSubsidaryInDmcc:
-        event.target.elements?.IncorporationOfSubsidaryInDmcc?.value,
-      data: {
-        username: sessionStorage?.getItem("username"),
-        // DmccId_certs: `dmcc-${event.target.elements.DmccId.value - 10}`,
-        DmccId_certs: `dmcc-1211`,
-        StatusIncorporation: Incorporation ? true : false,
-        StatusMoaAndAoa: MoaAndAoa ? true : false,
-        StatusIncumberency: Incumberency ? true : false,
-        StatusUndertakingLetterOfShareCapital: UndertakingLetterOfShareCapital
-          ? true
-          : false,
-        StatusAuthorizationLetter: AuthorizationLetter ? true : false,
-        StatusDeclerationOfUltimateBenefitialOwners: false,
-        StatusValidPassportCopy: false,
-        StatusUtilityBillForAddressProof: false,
-        StatusEmirateId: false,
-        StatusBussinessProfile: false,
-        StatusIncorporationOfSubsidaryInDmcc: false,
+    const onBoard={
+          company_bank:event.target?.elements?.company_bank?.value ,
+          company_legal_status: event.target?.elements?.company_legal_status?.value,
+          company_name: event.target?.elements?.company_name?.value,
+          company_registration_date:event.target?.elements?.company_registration_date?.value,
+          dt_company_activity:event.target?.elements?.dt_company_activity?.value,
+          dt_company_facility:event.target?.elements?.dt_company_facility?.value,
+          share_capital:event.target?.elements?.share_capital?.value,
+    }
+
+    let response = await fetch(`http://20.174.2.234:8084/api/onboard_company/${localStorage.getItem('userId')}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization":"Bearer "+localStorage.getItem('access_token'),
+
       },
-    };
+      body: JSON.stringify(onBoard),
+    });
+    let jsonData= await response.json();
+    console.log(jsonData);
+    // var newData={...jsonData?.data};
 
-    // list.push(newCompany);
-    newList.push({ ...newCompanyDetails, ...newCompanyDoc });
 
-    console.log(newList);
 
-    // const response = await fetch(`http://20.25.46.73:8081/api/putCertificatesUploaded`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(body),
-    // });
-    // const jsonData= await response.json();
-    // console.log(event.target.Company.value, jsonData);
-    // loadLobby({task:"newCompany"})
+    let formData = new FormData();
+
+      formData.append('shareHolder_name', event.target?.elements?.shareHolder_name?.value);
+      formData.append('role_in_company', event.target?.elements?.role_in_company?.value);
+      formData.append('emirates_id',event.target?.elements?.emirates_id?.value);
+      formData.append('share_holding', event.target?.elements?.share_holding?.value);
+      formData.append('mail_address', event.target?.elements?.mail_address?.value);
+      formData.append('contact_number', event.target?.elements?.contact_number?.value);
+      formData.append('additional_details', event.target?.elements?.additional_details?.value);
+
+      // Append files to FormData
+      formData.append('ValidPassportCopy', event.target[14].files[0]??'');
+      formData.append('EmirateId', event.target[16].files[0] ?? '');
+      formData.append('NOC',  '');
+      formData.append('UtilityBillForAddressProof', event.target[15].files[0] ?? '');
+      formData.append('BussinessProfile', event.target[17].files[0] ?? '');
+      formData.append('SpecimenSignature',  '');
+      formData.append('ShareHolderResolution', '');
+      formData.append('BankStatement', '');
+      formData.append('DeclarationFromLebanese', '');
+
+      console.log(formData);
+
+    response = await fetch(`http://20.174.2.234:8084/api/${localStorage.getItem('userId')}/save_shareHolder_info/${jsonData?.data?._id}`, {
+      method: "POST",
+      headers: {
+        // "Content-Type": "application/json",
+        "Authorization":"Bearer "+localStorage.getItem('access_token'),
+      },
+      body:formData,
+    });
+    const jsonData2= await response.json();
+    console.log(jsonData2);
+
+    const companyDoc= new FormData();
+    
+    companyDoc.append('Incorporation',event.target[18].files[0] ??'');
+    companyDoc.append('MoaAndAoa',event.target[19].files[0] ??'');
+    companyDoc.append('Incumberency', event.target[20].files[0] ??'');
+    companyDoc.append('IncorporationOfSubsidaryInDmcc',event.target[21].files[0] ??'');
+    companyDoc.append('UndertakingLetterOfShareCapital',event.target[22].files[0] ??'');
+    companyDoc.append('ManagementConsultancy',event.target[23].files[0] ??'');
+    companyDoc.append('DeclerationOfUltimateBenefitialOwners',event.target[24].files[0] ??'');
+    companyDoc.append('AuthorizationLetter',event.target[25].files[0] ??'');
+    companyDoc.append('BusinessPlan',event.target[26].files[0] ??'');
+    
+
+    response = await fetch(`http://20.174.2.234:8084/api/${localStorage.getItem('userId')}/upload_company_documents/${jsonData?.data?._id}`, {
+      method: "POST",
+      headers: {
+        "Authorization":"Bearer "+localStorage.getItem('access_token'),
+      },
+      body: companyDoc,
+    });
+    const jsonData3= await response.json();
+    console.log(jsonData3);
+    var newData={...jsonData?.data, 'documents':[
+      {doc_name:'ValidPassportCopy',hash:jsonData2?.data?.ValidPassportCopy},
+      {doc_name:'EmirateId',hash:jsonData2?.data?.EmirateId},
+      {doc_name:'UtilityBillForAddressProof',hash:jsonData2?.data?.UtilityBillForAddressProof},
+      {doc_name:'BussinessProfile',hash:jsonData2?.data?.BussinessProfile},
+      {doc_name:'Incorporation',hash:jsonData3?.data?.Incorporation},
+      {doc_name:'MoaAndAoa',hash:jsonData3?.data?.MoaAndAoa},
+      {doc_name:'Incumberency',hash:jsonData3?.data?.Incumberency},
+      {doc_name:'IncorporationOfSubsidaryInDmcc',hash:jsonData3?.data?.IncorporationOfSubsidaryInDmcc},
+      {doc_name:'ManagementConsultancy',hash:jsonData3?.data?.ManagementConsultancy},
+      {doc_name:'DeclerationOfUltimateBenefitialOwners',hash:jsonData3?.data?.DeclerationOfUltimateBenefitialOwners},
+      {doc_name:'UndertakingLetterOfShareCapital',hash:jsonData3?.data?.UndertakingLetterOfShareCapital},
+      {doc_name:'AuthorizationLetter',hash:jsonData3?.data?.AuthorizationLetter},
+      {doc_name:'BusinessPlan',hash:jsonData3?.data?.BusinessPlan},
+    ]};
+
+    console.log(newData);
+    newList.push(newData);
     loadLobby(newList);
   } else {
     sessionStorage.setItem("username", event.target.username.value);
@@ -479,10 +352,11 @@ async function handleFormSubmission(event) {
     const promiseArray = dmcc_ids.map((e) => {
       return Promise.resolve()
         .then(() =>
-          getCompanyDetailAndDocument(sessionStorage.getItem("username"), e)
+          getCompanyDetailAndDocument( event.target.username.value,  event.target.password.value)
         )
         .then((eachList) => {
-          newList.push(eachList);
+          console.log('eachList', eachList)
+          newList=eachList;
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -497,6 +371,7 @@ async function handleFormSubmission(event) {
       .catch((error) => {
         console.error("Error:", error);
       });
+
   }
 }
 
@@ -517,40 +392,40 @@ function displayDetail(list) {
   canvas.style.opacity = 0.2;
   companyListElement.innerHTML = `
     <div class="title" style="margin-bottom:20px">
-      <span style="padding: 5px;">Rak</span>
-      <span style="height: 8vh;"><img src="/src/res/rakdao.gif" alt="logo" width="100%" height="100%" style="padding: 0px;"></span>
-      <span style="padding: 5px;">Dao</span>
+      <span style="padding: 5px;"></span>
+      <span style="height: 8vh;"><img src="/src/res/throne.png" alt="logo" width="100%" height="100%" style="padding: 0px;"></span>
+      <span style="padding: 5px;">ThronePlus</span>
     </div>
 
-    <div style="display:flex;justify-content: space-between;width:80vw;margin:auto">
-      <div>
+    <div style="display:flex;justify-content: space-between;width:90vw;margin:auto">
+      <div style="width:45%; height: 70vh;overflow-y: scroll">
         <div class="displayHeader">Company Details</div>        
         <div class="eachDetail">Company Name: <span class="eachDetailAnswer">${
-          list.CompanyName || "nill"
+          list.company_name || "nill"
         }</span></div>
-        <div class="eachDetail">DmccId Id:  <span class="eachDetailAnswer"> ${
-          list.DmccId || "nill"
+        <div class="eachDetail">Transaction Id:  <span class="eachDetailAnswer" style="inline-size: 150px;overflow-wrap: break-word;"> ${
+          list.txID || "nill"
         } </span></div>
-        <div class="eachDetail">Financial Year Of The Company:  <span class="eachDetailAnswer"> ${
-          list.FinancialYearOfTheComapny || "nill"
+        <div class="eachDetail">Registration Date Year Of The Company:  <span class="eachDetailAnswer"> ${
+          list.company_registration_date || "nill"
         }</span></div>
         <div class="eachDetail">Proposed Bank Of The Company:  <span class="eachDetailAnswer"> ${
-          list.ProposedBankOfTheCompany || "nill"
+          list.company_bank || "nill"
         }</span></div>
         <div class="eachDetail">Activities Of The Dmcc Company:  <span class="eachDetailAnswer"> ${
-          list.ActivitiesOfTheDmccCompany || "nill"
+          list.dt_company_activity || "nill"
         }</span></div>
         <div class="eachDetail">Facility Of The Dmcc Company:  <span class="eachDetailAnswer"> ${
-          list.FacilityOfTheDmccCompany || "nill"
+          list.dt_company_facility || "nill"
         }</span></div>
         <div class="eachDetail">Legal Status Of The Company:  <span class="eachDetailAnswer"> ${
-          list.LegalStatusOfTheCompany || "nill"
+          list.company_legal_status || "nill"
         }</span></div>
         <div class="eachDetail">Share Capital:  <span class="eachDetailAnswer"> ${
-          list.ShareCapital || "nill"
+          list.share_capital || "nill"
         }</span></div>
-        <div class="eachDetail">Name Of The ShareHolder:  <span class="eachDetailAnswer"> ${
-          list.NameOfTheShareHolder || "nill"
+        <div class="eachDetail">ShareHolder ID:  <span class="eachDetailAnswer"> ${
+          list?.documents[0]?.share_holder_id || "nill"
         }</span></div>
         <div class="eachDetail">Select Role Of The Company:  <span class="eachDetailAnswer"> ${
           list.SelectRoleOfTheCompany || "nill"
@@ -572,100 +447,12 @@ function displayDetail(list) {
         }</span></div>
       </div>
 
-      <div>
+      <div style="width:45%; height: 70vh;overflow-y: scroll">
       <div class="displayHeader">Certificates</div>
-        ${
-          list.StatusIncorporation
-            ? `<div class="docLink" hashValue=${list.Incorporation} dmcc_id=${
-                list.DmccId_certs ?? list.DmccId
-              }>Incorporation</div>`
-            : ""
-        }
-        ${
-          list.StatusMoaAndAoa
-            ? `<div class="docLink" hashValue=${list.MoaAndAoa} dmcc_id=${
-                list.DmccId_certs ?? list.DmccId
-              }>MoaAndAoa</div>`
-            : ""
-        }
-        ${
-          list.StatusIncumberency
-            ? `<div class="docLink" hashValue=${list.Incumberency} dmcc_id=${
-                list.DmccId_certs ?? list.DmccId
-              }>Incumberency</div>`
-            : ""
-        }
-        ${
-          list.StatusUndertakingLetterOfShareCapital
-            ? `<div class="docLink" hashValue=${
-                list.UndertakingLetterOfShareCapital
-              } dmcc_id=${
-                list.DmccId_certs ?? list.DmccId
-              }>UndertakingLetterOfShareCapital</div>`
-            : ""
-        }
-        ${
-          list.StatusAuthorizationLetter
-            ? `<div class="docLink" hashValue=${
-                list.AuthorizationLetter
-              } dmcc_id=${
-                list.DmccId_certs ?? list.DmccId
-              }>AuthorizationLetter</div>`
-            : ""
-        }
 
-        ${
-          list.StatusDeclerationOfUltimateBenefitialOwners
-            ? `<div class="docLink" hashValue=${
-                list.DeclerationOfUltimateBenefitialOwners
-              } dmcc_id=${
-                list.DmccId_certs ?? list.DmccId
-              }>DeclerationOfUlti mateBenefitialOwners</div>`
-            : ""
-        }
-        ${
-          list.StatusValidPassportCopy
-            ? `<div class="docLink" hashValue=${
-                list.ValidPassportCopy
-              } dmcc_id=${
-                list.DmccId_certs ?? list.DmccId
-              }>ValidPassportCopy</div>`
-            : ""
-        }
-        ${
-          list.StatusUtilityBillForAddressProof
-            ? `<div class="docLink" hashValue=${
-                list.UtilityBillForAddressProof
-              } dmcc_id=${
-                list.DmccId_certs ?? list.DmccId
-              }>UtilityBillForAddressProof</div>`
-            : ""
-        }
-        ${
-          list.StatusEmirateId
-            ? `<div class="docLink" hashValue=${list.EmirateId} dmcc_id=${
-                list.DmccId_certs ?? list.DmccId
-              }>EmirateId</div>`
-            : ""
-        }
-        ${
-          list.StatusBussinessProfile
-            ? `<div class="docLink" hashValue=${
-                list.BussinessProfile
-              } dmcc_id=${
-                list.DmccId_certs ?? list.DmccId
-              }>BussinessProfile</div>`
-            : ""
-        }
-        ${
-          list.StatusIncorporationOfSubsidaryInDmcc
-            ? `<div class="docLink" hashValue=${
-                list.IncorporationOfSubsidaryInDmcc
-              } dmcc_id=${
-                list.DmccId_certs ?? list.DmccId
-              }>IncorporationOfSubsidaryInDmcc</div>`
-            : ""
-        }
+      ${list.documents.map(item => {
+        return `<div class="docLink" hashValue=${item.hash}>${item.doc_name}</div>`;
+      }).join('')}
       </div>
     </div>
     
@@ -675,7 +462,7 @@ function displayDetail(list) {
   var button = document.createElement("button");
   button.textContent = "Cancel";
   button.classList = "btn btn-danger";
-  button.style.margin = "-20px 0px 0px 1750px";
+  button.style.margin = "30px 0px 0px 50px";
 
   button.onclick = handleCancel;
 
@@ -690,15 +477,13 @@ function displayDetail(list) {
       console.log(
         "Link clicked!",
         e.target.getAttribute("hashValue"),
-        e.target.getAttribute("dmcc_id")
       );
       getBase64(
-        sessionStorage.getItem("username"),
-        e.target.getAttribute("dmcc_id"),
         e.target.getAttribute("hashValue")
       );
     });
   });
 }
 
-export { handleFormSubmission, displayDetail };
+export { displayDetail, handleFormSubmission };
+

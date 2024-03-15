@@ -5,13 +5,13 @@ const newUserFormHTML = `
 </div>
 
 <div class="inputContainer">
-  <label for="password">Password:</label>
-  <input type="password" id="password" name="password" >
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email">
 </div>
 
 <div class="inputContainer">
-  <label for="confirmPassword">Confirm Password:</label>
-  <input type="password" id="confirmPassword" name="confirmPassword">
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" >
 </div>
 
 <button type="submit" class="btn btn-primary my-3">Submit</button>

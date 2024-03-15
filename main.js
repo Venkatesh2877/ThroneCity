@@ -144,7 +144,7 @@ function LoadModel() {
       fontLoader.load(
         "node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json",
         (droidFont) => {
-          const textGeometry = new TextGeometry("Rak Dao", {
+          const textGeometry = new TextGeometry("ThronePlus", {
             height: 2,
             size: 80,
             font: droidFont,
@@ -158,7 +158,8 @@ function LoadModel() {
 
       // Image
       const textureLoader = new THREE.TextureLoader();
-      const imageTexture = textureLoader.load("./src/res/rakdao_jpeg.jpeg"); // Set the path to your image
+      // const imageTexture = textureLoader.load("./src/res/rakdao_jpeg.jpeg"); // Set the path to your image
+      const imageTexture = textureLoader.load("./src/res/throne.png"); // Set the path to your image
       const imageMaterial = new THREE.MeshBasicMaterial({
         map: imageTexture,
         transparent: true,
@@ -524,62 +525,62 @@ const axesHelper = new THREE.AxesHelper(5);
 axesHelper.position.set(3400, -112, 13800);
 scene.add(axesHelper);
 
-const Username = sessionStorage.getItem("username");
+const Username = localStorage.getItem("username");
 // const Username = "Ajay";
 
 const inputs = [
-  { question: "Company Name", name: "companyName", answered: false },
+  { question: "Company Name", name: "company_name", answered: false },
   {
-    question: "Financial Year Of The Company",
-    name: "FinancialYearOfTheCompany",
+    question: "Company registration date in DD/MM/YYYY format",
+    name: "company_registration_date",
     answered: false,
   },
   {
     question: "Proposed Bank Of The Company",
-    name: "ProposedBankOfTheCompany",
+    name: "company_bank",
     answered: false,
   },
   {
     question: "Activities Of The Company",
-    name: "ActivitiesOfTheDmccCompany",
+    name: "dt_company_activity",
     answered: false,
   },
   {
     question: "Facility Of The Company",
-    name: "FacilityOfTheDmccCompany",
+    name: "dt_company_facility",
     answered: false,
   },
   {
     question: "Legal Status Of The Company",
-    name: "LegalStatusOfTheCompany",
+    name: "company_legal_status",
     answered: false,
   },
-  { question: "Share Capital", name: "ShareCapital", answered: false },
+  { question: "Share Capital", name: "share_capital", answered: false },
   {
     question: "Name Of The Share Holder",
-    name: "NameOfTheShareHolder",
+    name: "shareHolder_name",
     answered: false,
   },
   {
     question: "Select Role Of The Company",
-    name: "SelectRoleOfTheCompany",
+    name: "role_in_company",
     answered: false,
   },
-  { question: "Emirates I D", name: "EmiratesId", answered: false },
+  { question: "Emirates I D", name: "emirates_id", answered: false },
   {
     question: "Share Holding Percentage",
-    name: "ShareHoldingPercentage",
+    name: "share_holding",
     answered: false,
   },
   {
     question: "Official Mail Address",
-    name: "OfficialMailAddress",
+    name: "mail_address",
     answered: false,
   },
-  { question: "Contact Number", name: "ContactNumber", answered: false },
+  { question: "Contact Number", name: "contact_number", answered: false },
   {
     question: "Additional Details",
-    name: "AdditionalDetails",
+    name: "additional_details",
     answered: false,
   },
 ];
@@ -616,6 +617,7 @@ function wishMe() {
 }
 
 export function loadRegistartion() {
+  console.log(Username )
   welcome.innerHTML = `Welcome ${Username} ! Please Share the following details`;
   speak(`Hello, ${Username}`);
   wishMe();

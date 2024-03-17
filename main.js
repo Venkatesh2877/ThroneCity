@@ -562,7 +562,7 @@ const inputs = [
     answered: false,
   },
   {
-    question: "Select Role Of The Company",
+    question: "Role Of The Company",
     name: "role_in_company",
     answered: false,
   },

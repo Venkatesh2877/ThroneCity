@@ -219,7 +219,7 @@ async function handleFormSubmission(event) {
       .catch((error) => {
         console.error("Error:", error);
       });
-  } else if (event.target.elements.confirmPassword) {
+  } else if (event.target.elements.email) {
     sessionStorage.removeItem("username");
     sessionStorage.removeItem("companyId");
     const body = {
@@ -240,6 +240,7 @@ async function handleFormSubmission(event) {
     const jsonData = await response.json();
     console.log(event.target.username.value, jsonData);
     newList=[];
+    getCompanyDetailAndDocument(event.target.username.value, event.target.password.value)
   } else if (event.target.elements.company_name) {
     // console.log(event)
     // console.log("register company", event.target[14].files[0]);

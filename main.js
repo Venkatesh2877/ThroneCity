@@ -146,12 +146,12 @@ function LoadModel() {
         (droidFont) => {
           const textGeometry = new TextGeometry("ThronePlus", {
             height: 2,
-            size: 80,
+            size: 50,
             font: droidFont,
           });
           const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00cccc });
           const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-          textMesh.position.set(3150, 80, 11580);
+          textMesh.position.set(3230, 90, 11580);
           scene.add(textMesh);
         }
       );
@@ -164,9 +164,9 @@ function LoadModel() {
         map: imageTexture,
         transparent: true,
       });
-      const imageGeometry = new THREE.PlaneGeometry(100, 100); // Adjust the size as needed
+      const imageGeometry = new THREE.PlaneGeometry(110, 110); // Adjust the size as needed
       const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
-      imageMesh.position.set(3080, 130, 11500); // Adjust the position as needed
+      imageMesh.position.set(3150, 100, 11500); // Adjust the position as needed
 
       scene.add(imageMesh);
     },
@@ -260,6 +260,22 @@ function LoadModel() {
           scene.add(textMesh);
         }
       );
+
+      //image
+      const textureLoader = new THREE.TextureLoader();
+      // const imageTexture = textureLoader.load("./src/res/rakdao_jpeg.jpeg"); // Set the path to your image
+      const imageTexture = textureLoader.load("./src/res/throne.png"); // Set the path to your image
+      const imageMaterial = new THREE.MeshBasicMaterial({
+        map: imageTexture,
+        transparent: true,
+      });
+      const imageGeometry = new THREE.PlaneGeometry(60, 60); // Adjust the size as needed
+      const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
+      imageMesh.position.set(4200, 10, 10620); // Adjust the position as needed
+      imageMesh.rotation.y = THREE.MathUtils.degToRad(-90);
+
+
+      scene.add(imageMesh);
     });
 
     var repGltfanimations = gltf.animations; // getting all gltf animation clips from gltf model
@@ -525,8 +541,6 @@ const axesHelper = new THREE.AxesHelper(5);
 axesHelper.position.set(3400, -112, 13800);
 scene.add(axesHelper);
 
-const Username = localStorage.getItem("username");
-// const Username = "Ajay";
 
 const inputs = [
   { question: "Company Name", name: "company_name", answered: false },
@@ -617,6 +631,7 @@ function wishMe() {
 }
 
 export function loadRegistartion() {
+  var Username = localStorage.getItem("username");
   console.log(Username )
   welcome.innerHTML = `Welcome ${Username} ! Please Share the following details`;
   speak(`Hello, ${Username}`);

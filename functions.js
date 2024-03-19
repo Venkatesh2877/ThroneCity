@@ -3,7 +3,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { updateMovement, updateShowingDetail } from "./characterControls";
-import { canvas, scene } from "./main";
+import { canvas, scene, lobbyCharacter } from "./main";
 
 export var list = [
   {
@@ -76,6 +76,7 @@ async function getCompanyDetailAndDocument(username, password) {
       body: JSON.stringify({username, password})
     }
   );
+  console.log(response);
   let jsonData = await response.json();
   localStorage.setItem('username',jsonData?.data?.username);
   localStorage.setItem('userId', jsonData?.data?._id);
@@ -164,7 +165,8 @@ function loadLobby(body) {
           });
           const textMaterial = new THREE.MeshBasicMaterial({ color: 0xa6a6a6 });
           const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-          textMesh.position.set(i * 350 + 2530, 55, 9900);
+          // textMesh.position.set(i * 350 + 2530, 55, 9900);
+          textMesh.position.set(i * 350 + 2530, 95, 9560);
           scene.add(textMesh);
         }
       );
@@ -192,7 +194,7 @@ async function handleFormSubmission(event) {
   document.querySelector(".input").style.display = "none";
   updateMovement(true);
 
-  if (event.target.elements.Company) {
+  if (event.target.elements.Company) {   //find company
     sessionStorage.setItem("companyId", event.target.Company.value);
     sessionStorage.removeItem("username");
 
@@ -219,7 +221,7 @@ async function handleFormSubmission(event) {
       .catch((error) => {
         console.error("Error:", error);
       });
-  } else if (event.target.elements.email) {
+  } else if (event.target.elements.email) {  //signup new user
     sessionStorage.removeItem("username");
     sessionStorage.removeItem("companyId");
     const body = {
@@ -241,7 +243,7 @@ async function handleFormSubmission(event) {
     console.log(event.target.username.value, jsonData);
     newList=[];
     getCompanyDetailAndDocument(event.target.username.value, event.target.password.value)
-  } else if (event.target.elements.company_name) {
+  } else if (event.target.elements.company_name) {// onboard a new company
     // console.log(event)
     // console.log("register company", event.target[14].files[0]);
     // console.log("register company", event.target.elements?.shareHolder_name?.value);
@@ -394,7 +396,7 @@ function displayDetail(list) {
   companyListElement.innerHTML = `
     <div class="title" style="margin-bottom:20px">
       <span style="padding: 5px;"></span>
-      <span style="height: 8vh;"><img src="/src/res/throne.png" alt="logo" width="100%" height="100%" style="padding: 0px;"></span>
+      <span style="height: 50px; width: 50px"><img src="/src/res/throne.png" alt="logo" width="100%" height="100%" style="padding: 0px;"></span>
       <span style="padding: 5px;">ThronePlus</span>
     </div>
 

@@ -397,7 +397,7 @@ function displayDetail(list) {
     <div class="title" style="margin-bottom:20px">
       <span style="padding: 5px;"></span>
       <span style="height: 50px; width: 50px"><img src="/src/res/throne.png" alt="logo" width="100%" height="100%" style="padding: 0px;"></span>
-      <span style="padding: 5px;">ThronePlus</span>
+      <span style="padding: 5px;">ThroneCity</span>
     </div>
 
     <div style="display:flex;justify-content: space-between;width:90vw;margin:auto">

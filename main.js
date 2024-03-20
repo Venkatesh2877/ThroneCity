@@ -144,14 +144,14 @@ function LoadModel() {
       fontLoader.load(
         "node_modules/three/examples/fonts/droid/droid_sans_bold.typeface.json",
         (droidFont) => {
-          const textGeometry = new TextGeometry("ThronePlus", {
+          const textGeometry = new TextGeometry("ThroneCity", {
             height: 2,
-            size: 50,
+            size: 40,
             font: droidFont,
           });
           const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00cccc });
           const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-          textMesh.position.set(3230, 90, 11580);
+          textMesh.position.set(3230, 94, 11580);
           scene.add(textMesh);
         }
       );
